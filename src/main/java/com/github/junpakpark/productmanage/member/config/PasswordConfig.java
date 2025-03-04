@@ -1,4 +1,4 @@
-package com.github.junpakpark.productmanage.common.config;
+package com.github.junpakpark.productmanage.member.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

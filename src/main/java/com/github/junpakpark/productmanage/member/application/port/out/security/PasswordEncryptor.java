@@ -1,4 +1,4 @@
-package com.github.junpakpark.productmanage.member.application.port.out;
+package com.github.junpakpark.productmanage.member.application.port.out.security;
 
 import com.github.junpakpark.productmanage.member.domain.Password;
 

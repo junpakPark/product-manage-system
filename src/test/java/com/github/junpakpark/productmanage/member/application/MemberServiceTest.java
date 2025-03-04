@@ -3,9 +3,9 @@ package com.github.junpakpark.productmanage.member.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.github.junpakpark.productmanage.member.application.port.in.ChangePasswordCommand;
-import com.github.junpakpark.productmanage.member.application.port.in.RegisterMemberCommand;
-import com.github.junpakpark.productmanage.member.application.port.out.PasswordEncryptor;
+import com.github.junpakpark.productmanage.member.application.port.in.web.ChangePasswordCommand;
+import com.github.junpakpark.productmanage.member.application.port.in.web.RegisterMemberCommand;
+import com.github.junpakpark.productmanage.member.application.port.out.security.PasswordEncryptor;
 import com.github.junpakpark.productmanage.member.domain.Member;
 import com.github.junpakpark.productmanage.member.domain.MemberRepository;
 import com.github.junpakpark.productmanage.member.domain.Password;
@@ -327,11 +327,6 @@ class MemberServiceTest {
             public <S extends Member, R> R findBy(final Example<S> example,
                                                   final Function<FetchableFluentQuery<S>, R> queryFunction) {
                 return null;
-            }
-
-            @Override
-            public Optional<Member> findByEmail(final String email) {
-                return Optional.empty();
             }
 
             private void setId(Member member, Long id) {

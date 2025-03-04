@@ -1,4 +1,4 @@
-package com.github.junpakpark.productmanage.member.application.port.in;
+package com.github.junpakpark.productmanage.member.application.port.in.web;
 
 public interface MemberUseCase {
 
