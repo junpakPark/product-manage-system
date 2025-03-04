@@ -24,3 +24,9 @@ spring:
 logging:
   level:
     org.hibernate.type: trace
+
+jwt:
+  token:
+    secret: "mF9WkhY9L77NsWjN7a4aPPVVmYSHJZbXkHfH6Qh7yTg="
+    access-expiration-ms: 3600000  # 1시간
+    refresh-expiration-ms: 604800000  # 7일
