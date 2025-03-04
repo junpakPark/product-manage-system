@@ -30,14 +30,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.security:spring-security-crypto'
 
+    implementation 'com.h2database:h2'
     compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
+//    runtimeOnly 'com.mysql:mysql-connector-j'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured:5.5.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    testRuntimeOnly 'com.h2database:h2'
 }
 
 tasks.named('test') {
