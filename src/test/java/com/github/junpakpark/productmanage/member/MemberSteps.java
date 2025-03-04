@@ -1,7 +1,7 @@
 package com.github.junpakpark.productmanage.member;
 
-import com.github.junpakpark.productmanage.member.application.port.in.ChangePasswordCommand;
-import com.github.junpakpark.productmanage.member.application.port.in.RegisterMemberCommand;
+import com.github.junpakpark.productmanage.member.application.port.in.web.ChangePasswordCommand;
+import com.github.junpakpark.productmanage.member.application.port.in.web.RegisterMemberCommand;
 import com.github.junpakpark.productmanage.member.domain.Role;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;

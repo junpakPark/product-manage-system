@@ -1,8 +1,8 @@
 package com.github.junpakpark.productmanage.member.adapter.in.web;
 
-import com.github.junpakpark.productmanage.member.application.port.in.ChangePasswordCommand;
-import com.github.junpakpark.productmanage.member.application.port.in.MemberUseCase;
-import com.github.junpakpark.productmanage.member.application.port.in.RegisterMemberCommand;
+import com.github.junpakpark.productmanage.member.application.port.in.web.ChangePasswordCommand;
+import com.github.junpakpark.productmanage.member.application.port.in.web.MemberUseCase;
+import com.github.junpakpark.productmanage.member.application.port.in.web.RegisterMemberCommand;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
