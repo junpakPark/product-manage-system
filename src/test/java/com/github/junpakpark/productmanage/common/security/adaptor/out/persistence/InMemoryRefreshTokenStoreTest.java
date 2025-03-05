@@ -2,7 +2,6 @@ package com.github.junpakpark.productmanage.common.security.adaptor.out.persiste
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.junpakpark.productmanage.common.security.application.dto.MemberInfo;
 import com.github.junpakpark.productmanage.member.domain.Role;
@@ -14,16 +13,15 @@ import org.junit.jupiter.api.Test;
 class InMemoryRefreshTokenStoreTest {
 
     private InMemoryRefreshTokenStore sut;
-    private Cache<String, MemberInfo> cache;
 
     @BeforeEach
     void setUp() {
-        cache = Caffeine.newBuilder()
-                .expireAfterWrite(14, TimeUnit.DAYS)
-                .maximumSize(50_000)
-                .build();
-
-        sut = new InMemoryRefreshTokenStore(cache);
+        sut = new InMemoryRefreshTokenStore(
+                Caffeine.newBuilder()
+                        .expireAfterWrite(14, TimeUnit.DAYS)
+                        .maximumSize(50_000)
+                        .build()
+        );
     }
 
     @Test
