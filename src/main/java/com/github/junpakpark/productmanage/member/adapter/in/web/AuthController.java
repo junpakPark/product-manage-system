@@ -28,7 +28,7 @@ public class AuthController {
     private final AuthUseCase authUseCase;
     private final ValidateMemberUseCase validateMemberUseCase;
 
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<AccessTokenResponse> login(
             @Valid @RequestBody final LoginCommand request,
             final HttpServletResponse response

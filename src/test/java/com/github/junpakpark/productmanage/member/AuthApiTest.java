@@ -3,6 +3,7 @@ package com.github.junpakpark.productmanage.member;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.junpakpark.productmanage.ApiTest;
+import com.github.junpakpark.productmanage.common.security.application.dto.TokenPair;
 import io.restassured.http.Cookie;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
@@ -37,11 +38,10 @@ class AuthApiTest extends ApiTest {
     void logout() {
         // Arrange
         MemberSteps.멤버가입요청(MemberSteps.멤버가입요청_생성());
-        final String issuedRefreshToken = AuthSteps.로그인요청(AuthSteps.로그인요청_생성())
-                .cookie("refresh-token");
+        final TokenPair tokenPair = AuthSteps.토큰발급();
 
         // Action
-        final var response = AuthSteps.로그아웃요청(issuedRefreshToken);
+        final var response = AuthSteps.로그아웃요청(tokenPair);
 
         // Assert
         final Cookie cookie = response.detailedCookie("refresh-token");
@@ -58,11 +58,10 @@ class AuthApiTest extends ApiTest {
     void reissue() {
         // Arrange
         MemberSteps.멤버가입요청(MemberSteps.멤버가입요청_생성());
-        final String issuedRefreshToken = AuthSteps.로그인요청(AuthSteps.로그인요청_생성())
-                .cookie("refresh-token");
+        final TokenPair tokenPair = AuthSteps.토큰발급();
 
         // Action
-        var response = AuthSteps.토큰재발급요청(issuedRefreshToken);
+        var response = AuthSteps.토큰재발급요청(tokenPair);
 
         // Assert
         final String newAccessToken = response.jsonPath().getString("accessToken");
