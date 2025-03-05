@@ -1,6 +1,6 @@
 package com.github.junpakpark.productmanage.member.application;
 
-import com.github.junpakpark.productmanage.common.security.application.dto.MemberInfo;
+import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
 import com.github.junpakpark.productmanage.member.application.port.in.web.ChangePasswordCommand;
 import com.github.junpakpark.productmanage.member.application.port.in.web.LoginCommand;
 import com.github.junpakpark.productmanage.member.application.port.in.web.MemberUseCase;

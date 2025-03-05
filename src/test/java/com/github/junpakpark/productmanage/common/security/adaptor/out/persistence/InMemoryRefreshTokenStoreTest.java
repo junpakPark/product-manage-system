@@ -3,7 +3,7 @@ package com.github.junpakpark.productmanage.common.security.adaptor.out.persiste
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.junpakpark.productmanage.common.security.application.dto.MemberInfo;
+import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
 import com.github.junpakpark.productmanage.common.domain.Role;
 import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.BeforeEach;

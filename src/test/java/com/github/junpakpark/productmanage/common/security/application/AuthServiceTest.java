@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.github.junpakpark.productmanage.common.security.adaptor.out.token.JwtProperties;
 import com.github.junpakpark.productmanage.common.security.adaptor.out.token.JwtTokenProvider;
 import com.github.junpakpark.productmanage.common.security.adaptor.out.token.JwtTokenValidator;
-import com.github.junpakpark.productmanage.common.security.application.dto.MemberInfo;
+import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
 import com.github.junpakpark.productmanage.common.security.application.dto.TokenPair;
 import com.github.junpakpark.productmanage.common.security.application.port.out.persistence.RefreshTokenStore;
 import com.github.junpakpark.productmanage.common.domain.Role;

@@ -1,6 +1,6 @@
 package com.github.junpakpark.productmanage.common.security.application;
 
-import com.github.junpakpark.productmanage.common.security.application.dto.MemberInfo;
+import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
 import com.github.junpakpark.productmanage.common.security.application.dto.TokenPair;
 import com.github.junpakpark.productmanage.common.security.application.port.in.web.AuthUseCase;
 import com.github.junpakpark.productmanage.common.security.application.port.out.persistence.RefreshTokenStore;
