@@ -1,8 +1,11 @@
 package com.github.junpakpark.productmanage.member.application;
 
+import com.github.junpakpark.productmanage.common.security.application.dto.MemberInfo;
 import com.github.junpakpark.productmanage.member.application.port.in.web.ChangePasswordCommand;
+import com.github.junpakpark.productmanage.member.application.port.in.web.LoginCommand;
 import com.github.junpakpark.productmanage.member.application.port.in.web.MemberUseCase;
 import com.github.junpakpark.productmanage.member.application.port.in.web.RegisterMemberCommand;
+import com.github.junpakpark.productmanage.member.application.port.in.web.ValidateMemberUseCase;
 import com.github.junpakpark.productmanage.member.application.port.out.security.PasswordEncryptor;
 import com.github.junpakpark.productmanage.member.domain.Member;
 import com.github.junpakpark.productmanage.member.domain.MemberRepository;
@@ -14,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MemberService implements MemberUseCase {
+public class MemberService implements MemberUseCase, ValidateMemberUseCase {
 
     private final MemberRepository memberRepository;
     private final PasswordEncryptor passwordEncryptor;
@@ -35,6 +38,14 @@ public class MemberService implements MemberUseCase {
         final Member member = memberRepository.getMemberById(memberId);
         final Password password = passwordEncryptor.encode(command.password());
         member.changePassword(password);
+    }
+
+    @Override
+    public MemberInfo validateMember(final LoginCommand command) {
+        final Member member = memberRepository.getMemberByEmail(command.email());
+        passwordEncryptor.validatePassword(command.password(), member.getPassword());
+
+        return new MemberInfo(member.getId(), member.getRole());
     }
 
 }
