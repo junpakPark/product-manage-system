@@ -1,5 +1,7 @@
 package com.github.junpakpark.productmanage.member.adapter.in.web;
 
+import com.github.junpakpark.productmanage.common.resolver.memberinfo.AuthMember;
+import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
 import com.github.junpakpark.productmanage.member.application.port.in.web.ChangePasswordCommand;
 import com.github.junpakpark.productmanage.member.application.port.in.web.MemberUseCase;
 import com.github.junpakpark.productmanage.member.application.port.in.web.RegisterMemberCommand;
@@ -7,7 +9,6 @@ import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,12 +35,12 @@ public class MemberController {
         return ResponseEntity.created(locationUri).build();
     }
 
-    @PatchMapping("/{memberId}/password")
+    @PatchMapping("/my/password")
     public ResponseEntity<Void> changePassword(
-            @PathVariable final Long memberId,
+            @AuthMember final MemberInfo memberInfo,
             @RequestBody final ChangePasswordCommand request
     ) {
-        memberUseCase.changePassword(memberId, request);
+        memberUseCase.changePassword(memberInfo.memberId(), request);
 
         return ResponseEntity.noContent().build();
     }
