@@ -1,6 +1,7 @@
 package com.github.junpakpark.productmanage.member.domain;
 
 import com.github.junpakpark.productmanage.common.domain.BaseTimeEntity;
+import com.github.junpakpark.productmanage.common.domain.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;

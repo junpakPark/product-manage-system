@@ -1,8 +1,9 @@
 package com.github.junpakpark.productmanage.member;
 
+import com.github.junpakpark.productmanage.common.security.application.dto.TokenPair;
 import com.github.junpakpark.productmanage.member.application.port.in.web.ChangePasswordCommand;
 import com.github.junpakpark.productmanage.member.application.port.in.web.RegisterMemberCommand;
-import com.github.junpakpark.productmanage.member.domain.Role;
+import com.github.junpakpark.productmanage.common.domain.Role;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -35,8 +36,10 @@ public class MemberSteps {
         return new ChangePasswordCommand("new-password");
     }
 
-    public static ExtractableResponse<Response> 비밀번호변경요청(final ChangePasswordCommand request) {
+    public static ExtractableResponse<Response> 비밀번호변경요청(final TokenPair tokenPair, final ChangePasswordCommand request) {
         return RestAssured.given().log().all()
+                .header("Authorization", "Bearer " + tokenPair.accessToken())
+                .cookie("refresh-token", tokenPair.refreshToken())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()

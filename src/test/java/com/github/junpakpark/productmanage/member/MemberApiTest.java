@@ -3,6 +3,7 @@ package com.github.junpakpark.productmanage.member;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.junpakpark.productmanage.ApiTest;
+import com.github.junpakpark.productmanage.common.security.application.dto.TokenPair;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,10 +32,11 @@ class MemberApiTest extends ApiTest {
     void changePassword_success() {
         // Arrange
         MemberSteps.멤버가입요청(MemberSteps.멤버가입요청_생성());
+        final TokenPair tokenPair = AuthSteps.토큰발급();
         final var request = MemberSteps.비밀번호변경요청_생성();
 
         // Action
-        final var response = MemberSteps.비밀번호변경요청(request);
+        final var response = MemberSteps.비밀번호변경요청(tokenPair,request);
 
         // Assert
         assertThat(response.statusCode()).isEqualTo(204);

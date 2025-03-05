@@ -3,7 +3,7 @@ package com.github.junpakpark.productmanage.member.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.github.junpakpark.productmanage.common.security.application.dto.MemberInfo;
+import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
 import com.github.junpakpark.productmanage.member.application.port.in.web.ChangePasswordCommand;
 import com.github.junpakpark.productmanage.member.application.port.in.web.LoginCommand;
 import com.github.junpakpark.productmanage.member.application.port.in.web.RegisterMemberCommand;
@@ -11,7 +11,7 @@ import com.github.junpakpark.productmanage.member.application.port.out.security.
 import com.github.junpakpark.productmanage.member.domain.Member;
 import com.github.junpakpark.productmanage.member.domain.MemberRepository;
 import com.github.junpakpark.productmanage.member.domain.Password;
-import com.github.junpakpark.productmanage.member.domain.Role;
+import com.github.junpakpark.productmanage.common.domain.Role;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

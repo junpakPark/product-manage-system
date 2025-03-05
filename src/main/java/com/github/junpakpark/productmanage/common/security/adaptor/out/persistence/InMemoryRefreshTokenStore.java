@@ -1,7 +1,7 @@
 package com.github.junpakpark.productmanage.common.security.adaptor.out.persistence;
 
 import com.github.benmanes.caffeine.cache.Cache;
-import com.github.junpakpark.productmanage.common.security.application.dto.MemberInfo;
+import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
 import com.github.junpakpark.productmanage.common.security.application.port.out.persistence.RefreshTokenStore;
 import org.springframework.stereotype.Component;
 

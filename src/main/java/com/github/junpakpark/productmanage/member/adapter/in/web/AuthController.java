@@ -1,6 +1,6 @@
 package com.github.junpakpark.productmanage.member.adapter.in.web;
 
-import com.github.junpakpark.productmanage.common.security.application.dto.MemberInfo;
+import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
 import com.github.junpakpark.productmanage.common.security.application.dto.TokenPair;
 import com.github.junpakpark.productmanage.common.security.application.port.in.web.AuthUseCase;
 import com.github.junpakpark.productmanage.member.adapter.in.web.dto.AccessTokenResponse;
@@ -28,7 +28,7 @@ public class AuthController {
     private final AuthUseCase authUseCase;
     private final ValidateMemberUseCase validateMemberUseCase;
 
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<AccessTokenResponse> login(
             @Valid @RequestBody final LoginCommand request,
             final HttpServletResponse response
