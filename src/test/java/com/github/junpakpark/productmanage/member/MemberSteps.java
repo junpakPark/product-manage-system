@@ -43,7 +43,7 @@ public class MemberSteps {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
-                .patch("/api/members/1/password")
+                .patch("/api/members/my/password")
                 .then()
                 .log().all()
                 .extract();
