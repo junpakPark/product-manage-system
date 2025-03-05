@@ -21,6 +21,11 @@ spring:
         highlight_sql: true
         use_sql_comments: true
 
+  cache:
+    cache-names: refreshTokenCache
+    caffeine:
+      spec: expireAfterWrite=14d
+
 logging:
   level:
     org.hibernate.type: trace
