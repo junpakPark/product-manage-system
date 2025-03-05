@@ -20,7 +20,7 @@ class AuthenticationInterceptorTest {
 
     private HttpServletRequest request;
     private HttpServletResponse response;
-    private final Object object = new Object();
+    private final Object handler = new Object();
 
     @BeforeEach
     void setUp() {
@@ -37,7 +37,7 @@ class AuthenticationInterceptorTest {
         when(request.getHeader("Authorization")).thenReturn("Bearer valid-access-token");
 
         // Action
-        final boolean result = sut.preHandle(request, response, object);
+        final boolean result = sut.preHandle(request, response, handler);
 
         // Assert
         assertThat(result).isTrue();
@@ -50,7 +50,7 @@ class AuthenticationInterceptorTest {
         when(request.getHeader("Authorization")).thenReturn(null);
 
         // Action & Assert
-        assertThatThrownBy(() -> sut.preHandle(request, response, object))
+        assertThatThrownBy(() -> sut.preHandle(request, response, handler))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -61,7 +61,7 @@ class AuthenticationInterceptorTest {
         when(request.getHeader("Authorization")).thenReturn("Bearer invalid-token");
 
         // Action & Assert
-        assertThatThrownBy(() -> sut.preHandle(request, response, object))
+        assertThatThrownBy(() -> sut.preHandle(request, response, handler))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -72,7 +72,7 @@ class AuthenticationInterceptorTest {
         when(request.getHeader("Authorization")).thenReturn("Bearer not-access-token");
 
         // Action & Assert
-        assertThatThrownBy(() -> sut.preHandle(request, response, object))
+        assertThatThrownBy(() -> sut.preHandle(request, response, handler))
                 .isInstanceOf(AuthenticationException.class);
     }
 
