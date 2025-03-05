@@ -1,6 +1,6 @@
 package com.github.junpakpark.productmanage.common.infrastructure.audit;
 
-import com.github.junpakpark.productmanage.common.interceptor.AuthorizationHeaderExtractor;
+import com.github.junpakpark.productmanage.common.security.util.AuthorizationHeaderExtractor;
 import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
 import com.github.junpakpark.productmanage.common.security.application.port.out.token.TokenValidator;
 import jakarta.servlet.http.HttpServletRequest;

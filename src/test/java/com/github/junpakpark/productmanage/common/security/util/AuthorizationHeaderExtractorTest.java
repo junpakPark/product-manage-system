@@ -1,4 +1,4 @@
-package com.github.junpakpark.productmanage.common.interceptor;
+package com.github.junpakpark.productmanage.common.security.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
