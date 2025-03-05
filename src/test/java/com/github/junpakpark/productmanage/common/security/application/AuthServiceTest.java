@@ -1,7 +1,6 @@
 package com.github.junpakpark.productmanage.common.security.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.github.junpakpark.productmanage.common.security.adaptor.out.token.JwtProperties;
 import com.github.junpakpark.productmanage.common.security.adaptor.out.token.JwtTokenProvider;
@@ -9,8 +8,6 @@ import com.github.junpakpark.productmanage.common.security.adaptor.out.token.Jwt
 import com.github.junpakpark.productmanage.common.security.application.dto.MemberInfo;
 import com.github.junpakpark.productmanage.common.security.application.dto.TokenPair;
 import com.github.junpakpark.productmanage.common.security.application.port.out.persistence.RefreshTokenStore;
-import com.github.junpakpark.productmanage.common.security.application.port.out.token.TokenProvider;
-import com.github.junpakpark.productmanage.common.security.application.port.out.token.TokenValidator;
 import com.github.junpakpark.productmanage.member.domain.Role;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,8 +19,6 @@ import org.junit.jupiter.api.Test;
 class AuthServiceTest {
 
     private AuthService sut;
-    private TokenProvider tokenProvider;
-    private TokenValidator tokenValidator;
     private RefreshTokenStore refreshTokenStore;
 
     @BeforeEach
@@ -34,10 +29,8 @@ class AuthServiceTest {
                 3600000L,
                 86400000L
         );
-        tokenProvider = new JwtTokenProvider(jwtProperties);
-        tokenValidator = new JwtTokenValidator(secretKey);
         refreshTokenStore = getFakeRefreshTokenStore();
-        sut = new AuthService(tokenProvider, tokenValidator, refreshTokenStore);
+        sut = new AuthService(new JwtTokenProvider(jwtProperties), new JwtTokenValidator(secretKey), refreshTokenStore);
     }
 
     @Test
@@ -90,8 +83,7 @@ class AuthServiceTest {
         sut.removeRefreshToken(refreshToken);
 
         // Assert
-        assertThatThrownBy(() -> refreshTokenStore.findByRefreshToken(refreshToken))
-                .isInstanceOf(IllegalArgumentException.class);
+        assertThat(refreshTokenStore.findByRefreshToken(refreshToken)).isNull();
     }
 
     private RefreshTokenStore getFakeRefreshTokenStore() {
@@ -112,7 +104,7 @@ class AuthServiceTest {
             @Override
             public MemberInfo findByRefreshToken(final String refreshToken) {
                 if (!store.containsKey(refreshToken)) {
-                    throw new IllegalArgumentException("Invalid refresh token");
+                    return null;
                 }
                 return store.get(refreshToken);
             }
