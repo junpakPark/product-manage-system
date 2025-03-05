@@ -1,8 +1,8 @@
 package com.github.junpakpark.productmanage.common.security.adaptor.out.token;
 
+import com.github.junpakpark.productmanage.common.domain.Role;
 import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
 import com.github.junpakpark.productmanage.common.security.application.port.out.token.TokenValidator;
-import com.github.junpakpark.productmanage.common.domain.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
@@ -33,7 +33,7 @@ public class JwtTokenValidator implements TokenValidator {
     @Override
     public MemberInfo parseToken(final String token) {
         final Claims claims = extractClaims(token);
-        final Long memberId = Long.valueOf(claims.get("memberId").toString());
+        final Long memberId = Long.valueOf(claims.getSubject());
         final Role role = Role.valueOf(claims.get("role").toString());
 
         return new MemberInfo(memberId, role);
