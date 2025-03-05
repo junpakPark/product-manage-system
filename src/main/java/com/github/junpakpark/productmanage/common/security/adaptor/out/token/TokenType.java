@@ -7,4 +7,8 @@ public enum TokenType {
     ACCESS, REFRESH,
     ;
 
+    public boolean isAccess() {
+        return this == TokenType.ACCESS;
+    }
+
 }
