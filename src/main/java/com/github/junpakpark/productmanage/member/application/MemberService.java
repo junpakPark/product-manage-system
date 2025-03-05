@@ -41,6 +41,7 @@ public class MemberService implements MemberUseCase, ValidateMemberUseCase {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public MemberInfo validateMember(final LoginCommand command) {
         final Member member = memberRepository.getMemberByEmail(command.email());
         passwordEncryptor.validatePassword(command.password(), member.getPassword());

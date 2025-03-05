@@ -5,6 +5,7 @@ import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo
 import com.github.junpakpark.productmanage.member.application.port.in.web.ChangePasswordCommand;
 import com.github.junpakpark.productmanage.member.application.port.in.web.MemberUseCase;
 import com.github.junpakpark.productmanage.member.application.port.in.web.RegisterMemberCommand;
+import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class MemberController {
 
     @PostMapping
     public ResponseEntity<Void> registerMember(
-            @RequestBody final RegisterMemberCommand request,
+            @Valid @RequestBody final RegisterMemberCommand request,
             final UriComponentsBuilder uriComponentsBuilder
     ) {
         final Long memberId = memberUseCase.register(request);
@@ -38,7 +39,7 @@ public class MemberController {
     @PatchMapping("/my/password")
     public ResponseEntity<Void> changePassword(
             @AuthMember final MemberInfo memberInfo,
-            @RequestBody final ChangePasswordCommand request
+            @Valid @RequestBody final ChangePasswordCommand request
     ) {
         memberUseCase.changePassword(memberInfo.memberId(), request);
 
