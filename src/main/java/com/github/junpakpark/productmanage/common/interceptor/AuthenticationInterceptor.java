@@ -1,6 +1,7 @@
 package com.github.junpakpark.productmanage.common.interceptor;
 
 import com.github.junpakpark.productmanage.common.security.application.port.out.token.TokenValidator;
+import com.github.junpakpark.productmanage.common.security.util.AuthorizationHeaderExtractor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import javax.naming.AuthenticationException;

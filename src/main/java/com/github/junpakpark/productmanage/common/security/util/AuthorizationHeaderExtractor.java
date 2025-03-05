@@ -1,4 +1,4 @@
-package com.github.junpakpark.productmanage.common.interceptor;
+package com.github.junpakpark.productmanage.common.security.util;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;

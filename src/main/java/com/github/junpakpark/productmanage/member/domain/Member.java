@@ -1,6 +1,6 @@
 package com.github.junpakpark.productmanage.member.domain;
 
-import com.github.junpakpark.productmanage.common.domain.BaseTimeEntity;
+import com.github.junpakpark.productmanage.common.domain.BaseEntity;
 import com.github.junpakpark.productmanage.common.domain.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member extends BaseTimeEntity {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
