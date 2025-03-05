@@ -11,7 +11,7 @@ import com.github.junpakpark.productmanage.member.application.port.out.security.
 import com.github.junpakpark.productmanage.member.domain.Member;
 import com.github.junpakpark.productmanage.member.domain.MemberRepository;
 import com.github.junpakpark.productmanage.member.domain.Password;
-import com.github.junpakpark.productmanage.member.domain.Role;
+import com.github.junpakpark.productmanage.common.domain.Role;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

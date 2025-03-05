@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.github.junpakpark.productmanage.common.security.application.dto.MemberInfo;
-import com.github.junpakpark.productmanage.member.domain.Role;
+import com.github.junpakpark.productmanage.common.domain.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

@@ -8,7 +8,7 @@ import com.github.junpakpark.productmanage.common.security.adaptor.out.token.Jwt
 import com.github.junpakpark.productmanage.common.security.application.dto.MemberInfo;
 import com.github.junpakpark.productmanage.common.security.application.dto.TokenPair;
 import com.github.junpakpark.productmanage.common.security.application.port.out.persistence.RefreshTokenStore;
-import com.github.junpakpark.productmanage.member.domain.Role;
+import com.github.junpakpark.productmanage.common.domain.Role;
 import java.util.HashMap;
 import java.util.Map;
 import org.assertj.core.api.SoftAssertions;

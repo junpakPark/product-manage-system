@@ -2,7 +2,7 @@ package com.github.junpakpark.productmanage.member.application.port.in.web;
 
 import com.github.junpakpark.productmanage.member.domain.Member;
 import com.github.junpakpark.productmanage.member.domain.Password;
-import com.github.junpakpark.productmanage.member.domain.Role;
+import com.github.junpakpark.productmanage.common.domain.Role;
 
 public record RegisterMemberCommand(
         String name,

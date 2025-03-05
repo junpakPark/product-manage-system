@@ -3,7 +3,7 @@ package com.github.junpakpark.productmanage.common.security.adaptor.out.token;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.github.junpakpark.productmanage.member.domain.Role;
+import com.github.junpakpark.productmanage.common.domain.Role;
 import com.github.junpakpark.productmanage.common.security.application.dto.MemberInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

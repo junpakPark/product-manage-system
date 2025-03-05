@@ -1,6 +1,6 @@
 package com.github.junpakpark.productmanage.common.security.adaptor.out.token;
 
-import com.github.junpakpark.productmanage.member.domain.Role;
+import com.github.junpakpark.productmanage.common.domain.Role;
 import com.github.junpakpark.productmanage.common.security.application.dto.MemberInfo;
 import com.github.junpakpark.productmanage.common.security.application.port.out.token.TokenProvider;
 import io.jsonwebtoken.Claims;
