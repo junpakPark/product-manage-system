@@ -3,7 +3,9 @@ package com.github.junpakpark.productmanage.member.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.github.junpakpark.productmanage.common.security.application.dto.MemberInfo;
 import com.github.junpakpark.productmanage.member.application.port.in.web.ChangePasswordCommand;
+import com.github.junpakpark.productmanage.member.application.port.in.web.LoginCommand;
 import com.github.junpakpark.productmanage.member.application.port.in.web.RegisterMemberCommand;
 import com.github.junpakpark.productmanage.member.application.port.out.security.PasswordEncryptor;
 import com.github.junpakpark.productmanage.member.domain.Member;
@@ -75,7 +77,7 @@ class MemberServiceTest {
         void fail() {
             // Arrange
             sut.register(registerCommand);
-            RegisterMemberCommand duplicateCommand = new RegisterMemberCommand(
+            final RegisterMemberCommand duplicateCommand = new RegisterMemberCommand(
                     "박준현",
                     "junpak.park@gmail.com",
                     "new-password",
@@ -120,13 +122,60 @@ class MemberServiceTest {
             // Arrange
             Long nonExistentMemberId = 999L;
 
-            // when & then
+            // Action
+            // Assert
             assertThatThrownBy(() -> sut.changePassword(nonExistentMemberId, command))
                     .isInstanceOf(NoSuchElementException.class)
                     .hasMessage("Member not found");
         }
     }
 
+    @Nested
+    @DisplayName("로그인 시,")
+    class ValidateMemberTest {
+
+        @Test
+        @DisplayName("이메일과 비밀번호가 일치하면 MemberInfo를 반환한다.")
+        void success() {
+            // Arrange
+            sut.register(registerCommand);
+            final LoginCommand command = new LoginCommand(registerCommand.email(), registerCommand.password());
+
+            // Action
+            final MemberInfo memberInfo = sut.validateMember(command);
+
+            // Assert
+            SoftAssertions.assertSoftly(softly -> {
+                assertThat(memberInfo.memberId()).isNotNull();
+                assertThat(memberInfo.role()).isEqualTo(Role.SELLER);
+            });
+        }
+
+        @Test
+        @DisplayName("이메일이 존재하지 않으면 예외가 발생한다.")
+        void emailNotFound() {
+            // Arrange
+            final LoginCommand command = new LoginCommand("non-existent@gmail.com", "비밀번호");
+
+            // Action & Assert
+            assertThatThrownBy(() -> sut.validateMember(command))
+                    .isInstanceOf(NoSuchElementException.class);
+        }
+
+        @Test
+        @DisplayName("비밀번호가 일치하지 않으면 예외가 발생한다.")
+        void invalidPassword() {
+            // Arrange
+            sut.register(registerCommand);
+            final LoginCommand command = new LoginCommand(registerCommand.email(), "wrong-password");
+
+            // Action
+            // Assert
+            assertThatThrownBy(() -> sut.validateMember(command))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("Invalid password");
+        }
+    }
 
     private PasswordEncryptor getFakePasswordEncryptor() {
         return new PasswordEncryptor() {
@@ -154,6 +203,13 @@ class MemberServiceTest {
             public boolean existsByEmail(String email) {
                 return store.values().stream()
                         .anyMatch(member -> member.getEmail().equals(email));
+            }
+
+            @Override
+            public Optional<Member> findByEmail(final String email) {
+                return store.values().stream()
+                        .filter(member -> member.getEmail().equals(email))
+                        .findFirst();
             }
 
             @Override

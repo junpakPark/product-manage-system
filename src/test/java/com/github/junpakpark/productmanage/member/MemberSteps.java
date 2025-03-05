@@ -15,7 +15,7 @@ public class MemberSteps {
         return new RegisterMemberCommand(
                 "박준현",
                 "junpak.park@gmail.com",
-                "newPassword",
+                "password",
                 Role.SELLER
         );
     }
