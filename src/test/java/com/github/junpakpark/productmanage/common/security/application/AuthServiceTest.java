@@ -1,0 +1,121 @@
+package com.github.junpakpark.productmanage.common.security.application;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import com.github.junpakpark.productmanage.common.security.adaptor.out.token.JwtProperties;
+import com.github.junpakpark.productmanage.common.security.adaptor.out.token.JwtTokenProvider;
+import com.github.junpakpark.productmanage.common.security.adaptor.out.token.JwtTokenValidator;
+import com.github.junpakpark.productmanage.common.security.application.dto.MemberInfo;
+import com.github.junpakpark.productmanage.common.security.application.dto.TokenPair;
+import com.github.junpakpark.productmanage.common.security.application.port.out.persistence.RefreshTokenStore;
+import com.github.junpakpark.productmanage.common.security.application.port.out.token.TokenProvider;
+import com.github.junpakpark.productmanage.common.security.application.port.out.token.TokenValidator;
+import com.github.junpakpark.productmanage.member.domain.Role;
+import java.util.HashMap;
+import java.util.Map;
+import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+class AuthServiceTest {
+
+    private AuthService sut;
+    private TokenProvider tokenProvider;
+    private TokenValidator tokenValidator;
+    private RefreshTokenStore refreshTokenStore;
+
+    @BeforeEach
+    void setUp() {
+        final String secretKey = "mF9WkhY9L77NsWjN7a4aPPVVmYSHJZbXkHfH6Qh7yTg=";
+        final JwtProperties jwtProperties = new JwtProperties(
+                secretKey,
+                3600000L,
+                86400000L
+        );
+        tokenProvider = new JwtTokenProvider(jwtProperties);
+        tokenValidator = new JwtTokenValidator(secretKey);
+        refreshTokenStore = getFakeRefreshTokenStore();
+        sut = new AuthService(tokenProvider, tokenValidator, refreshTokenStore);
+    }
+
+    @Test
+    @DisplayName("accessToken과_refreshToken을_발급하고_refreshTokenStore에_저장한다")
+    void issueTokens() {
+        // Arrange
+        final MemberInfo memberInfo = new MemberInfo(1L, Role.SELLER);
+
+        // Act
+        final TokenPair tokenPair = sut.issueTokens(memberInfo);
+
+        // Assert
+        final MemberInfo storedInfo = refreshTokenStore.findByRefreshToken(tokenPair.refreshToken());
+        SoftAssertions.assertSoftly(softly -> {
+            assertThat(tokenPair).isNotNull();
+            assertThat(tokenPair.accessToken()).isNotNull();
+            assertThat(tokenPair.refreshToken()).isNotNull();
+            assertThat(storedInfo).isEqualTo(memberInfo);
+        });
+    }
+
+    @Test
+    @DisplayName("refreshToken으로_새로운_토큰을_재발급한다")
+    void reissueToken() {
+        // Arrange
+        final MemberInfo memberInfo = new MemberInfo(1L, Role.SELLER);
+        final TokenPair initialTokens = sut.issueTokens(memberInfo);
+
+        // Act
+        final TokenPair reissuedTokens = sut.reissueToken(initialTokens.refreshToken());
+
+        // Assert
+        SoftAssertions.assertSoftly(softly -> {
+            assertThat(reissuedTokens).isNotNull();
+            assertThat(reissuedTokens.accessToken()).isNotNull();
+            assertThat(reissuedTokens.refreshToken()).isNotNull();
+            assertThat(reissuedTokens.refreshToken()).isNotEqualTo(initialTokens.refreshToken());
+        });
+    }
+
+    @Test
+    @DisplayName("refreshToken을_제거한다")
+    void removeRefreshToken() {
+        // Arrange
+        final MemberInfo memberInfo = new MemberInfo(1L, Role.ADMIN);
+        final TokenPair tokenPair = sut.issueTokens(memberInfo);
+        final String refreshToken = tokenPair.refreshToken();
+
+        // Act
+        sut.removeRefreshToken(refreshToken);
+
+        // Assert
+        assertThatThrownBy(() -> refreshTokenStore.findByRefreshToken(refreshToken))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    private RefreshTokenStore getFakeRefreshTokenStore() {
+        return new RefreshTokenStore() {
+
+            private final Map<String, MemberInfo> store = new HashMap<>();
+
+            @Override
+            public void save(final String refreshToken, final MemberInfo memberInfo) {
+                store.put(refreshToken, memberInfo);
+            }
+
+            @Override
+            public void remove(final String refreshToken) {
+                store.remove(refreshToken);
+            }
+
+            @Override
+            public MemberInfo findByRefreshToken(final String refreshToken) {
+                if (!store.containsKey(refreshToken)) {
+                    throw new IllegalArgumentException("Invalid refresh token");
+                }
+                return store.get(refreshToken);
+            }
+        };
+    }
+}
