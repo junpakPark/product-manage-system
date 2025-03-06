@@ -60,6 +60,7 @@ public abstract class ProductOption extends BaseEntity {
     }
 
     public void update(final ProductOption productOption) {
+        validateType(productOption.getOptionType());
         validateNonNull(productOption.name, productOption.additionalPrice);
         this.name = productOption.name;
         this.additionalPrice = productOption.additionalPrice;
@@ -84,6 +85,12 @@ public abstract class ProductOption extends BaseEntity {
     private void validateNonNull(final Name name, final Money additionalPrice) {
         Objects.requireNonNull(name, "옵션명은 null이 될 수 없습니다.");
         Objects.requireNonNull(additionalPrice, "추가 요금은 null이 될 수 없습니다.");
+    }
+
+    private void validateType(final OptionType optionType) {
+        if (this.getOptionType().isDifferent(optionType)) {
+            throw new IllegalArgumentException("옵션 타입은 변경할 수 없습니다.");
+        }
     }
 
     @Override

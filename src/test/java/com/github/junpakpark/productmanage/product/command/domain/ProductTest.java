@@ -193,7 +193,7 @@ class ProductTest {
 
             // Assert
             SoftAssertions.assertSoftly(softly -> {
-                softly.assertThat(sut.getProductOptions().getOptions()).contains(option);
+                softly.assertThat(sut.getProductOptions()).contains(option);
                 softly.assertThat(option.getProduct()).isEqualTo(sut);
             });
         }
@@ -229,7 +229,7 @@ class ProductTest {
 
             // Assert
             SoftAssertions.assertSoftly(softly -> {
-                softly.assertThat(sut.getProductOptions().getOptions()).isEmpty();
+                softly.assertThat(sut.getProductOptions()).isEmpty();
                 softly.assertThat(option.getProduct()).isNull();
             });
         }
@@ -264,7 +264,7 @@ class ProductTest {
             sut.updateOption(1L, updatedOption);
 
             // Assert
-            final ProductOption result = sut.getProductOptions().getOptions().getFirst();
+            final ProductOption result = sut.getProductOptions().getFirst();
             assertThat(result.getName()).isEqualTo(new Name("수정된 옵션명"));
         }
 
