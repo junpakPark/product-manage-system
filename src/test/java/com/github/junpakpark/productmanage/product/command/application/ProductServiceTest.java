@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.github.junpakpark.productmanage.common.domain.Role;
 import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
+import com.github.junpakpark.productmanage.product.command.OptionSteps;
 import com.github.junpakpark.productmanage.product.command.ProductSteps;
 import com.github.junpakpark.productmanage.product.command.application.port.in.web.OptionChoiceCommand;
 import com.github.junpakpark.productmanage.product.command.application.port.in.web.OptionCommand;
@@ -248,21 +249,8 @@ class ProductServiceTest {
 
         @BeforeEach
         void setUp() {
-            inputCommand = new OptionCommand(
-                    "원하시는 문구를 입력해주세요",
-                    OptionType.INPUT,
-                    BigDecimal.valueOf(1000),
-                    Collections.emptyList()
-            );
-            selectCommand = new OptionCommand(
-                    "원하시는 색상을 선택해주세요",
-                    OptionType.SELECT,
-                    BigDecimal.valueOf(1000),
-                    List.of(
-                            new OptionChoiceCommand("빨강"),
-                            new OptionChoiceCommand("파랑")
-                    )
-            );
+            inputCommand = OptionSteps.입력옵션생성요청_생성();
+            selectCommand = OptionSteps.선택옵션생성요청_생성();
         }
 
         @Nested
