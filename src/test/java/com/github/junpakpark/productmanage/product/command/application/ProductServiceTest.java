@@ -5,15 +5,16 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.github.junpakpark.productmanage.common.domain.Role;
 import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
+import com.github.junpakpark.productmanage.product.command.ProductSteps;
 import com.github.junpakpark.productmanage.product.command.application.port.in.web.CreateProductCommand;
 import com.github.junpakpark.productmanage.product.command.application.port.in.web.UpdateProductCommand;
 import com.github.junpakpark.productmanage.product.command.domain.Product;
 import com.github.junpakpark.productmanage.product.command.domain.ProductRepository;
-import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("NonAsciiCharacters")
 class ProductServiceTest {
 
     private ProductService sut;
@@ -26,7 +27,7 @@ class ProductServiceTest {
         productRepository = new FakeProductRepository();
         sut = new ProductService(productRepository);
         memberInfo = new MemberInfo(1L, Role.SELLER);
-        createProductCommand = getCreateProductCommand();
+        createProductCommand = ProductSteps.상품생성요청_생성();
     }
 
     @Test
@@ -44,7 +45,7 @@ class ProductServiceTest {
     void update() {
         // Arrange
         final Long productId = sut.create(memberInfo, createProductCommand);
-        final UpdateProductCommand command = getUpdateProductCommand();
+        final UpdateProductCommand command = ProductSteps.상품수정요청_생성();
 
         // Action
         sut.update(memberInfo, productId, command);
@@ -66,24 +67,6 @@ class ProductServiceTest {
         // Assert
         assertThatThrownBy(() -> productRepository.getProductById(productId))
                 .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    private CreateProductCommand getCreateProductCommand() {
-        return new CreateProductCommand(
-                "상품명",
-                "상품 설명",
-                BigDecimal.valueOf(1000L),
-                BigDecimal.valueOf(100L)
-        );
-    }
-
-    private UpdateProductCommand getUpdateProductCommand() {
-        return new UpdateProductCommand(
-                "새상품명",
-                "새로운 상품 설명",
-                BigDecimal.valueOf(2000L),
-                BigDecimal.valueOf(200L)
-        );
     }
 
 }
