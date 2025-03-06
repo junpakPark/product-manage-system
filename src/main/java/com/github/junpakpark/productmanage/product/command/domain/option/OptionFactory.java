@@ -1,6 +1,5 @@
 package com.github.junpakpark.productmanage.product.command.domain.option;
 
-import com.github.junpakpark.productmanage.product.command.application.port.in.web.OptionChoiceCommand;
 import com.github.junpakpark.productmanage.product.command.application.port.in.web.OptionCommand;
 import com.github.junpakpark.productmanage.product.command.domain.Money;
 import com.github.junpakpark.productmanage.product.command.domain.Name;
@@ -21,9 +20,8 @@ public class OptionFactory {
         };
     }
 
-    private List<OptionChoice> createOptionChoice(List<OptionChoiceCommand> choiceCommands) {
+    private List<OptionChoice> createOptionChoice(List<String> choiceCommands) {
         return choiceCommands.stream()
-                .map(OptionChoiceCommand::value)
                 .map(this::toOptionChoice)
                 .toList();
     }

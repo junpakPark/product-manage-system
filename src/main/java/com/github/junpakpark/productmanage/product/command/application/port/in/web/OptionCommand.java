@@ -8,6 +8,6 @@ public record OptionCommand(
         String name,
         OptionType optionType,
         BigDecimal additionalPrice,
-        List<OptionChoiceCommand> choices
+        List<String> choices
 ) {
 }

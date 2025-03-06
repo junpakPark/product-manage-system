@@ -3,7 +3,6 @@ package com.github.junpakpark.productmanage.product.command.domain.option;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.github.junpakpark.productmanage.product.command.application.port.in.web.OptionChoiceCommand;
 import com.github.junpakpark.productmanage.product.command.application.port.in.web.OptionCommand;
 import com.github.junpakpark.productmanage.product.command.domain.Money;
 import com.github.junpakpark.productmanage.product.command.domain.Name;
@@ -55,10 +54,7 @@ class OptionFactoryTest {
                 "색상 선택 옵션",
                 OptionType.SELECT,
                 BigDecimal.valueOf(2000),
-                List.of(
-                        new OptionChoiceCommand("빨강"),
-                        new OptionChoiceCommand("파랑")
-                )
+                List.of("빨강", "파랑")
         );
 
         // Action

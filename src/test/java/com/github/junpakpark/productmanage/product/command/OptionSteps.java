@@ -1,7 +1,6 @@
 package com.github.junpakpark.productmanage.product.command;
 
 import com.github.junpakpark.productmanage.common.security.application.dto.TokenPair;
-import com.github.junpakpark.productmanage.product.command.application.port.in.web.OptionChoiceCommand;
 import com.github.junpakpark.productmanage.product.command.application.port.in.web.OptionCommand;
 import com.github.junpakpark.productmanage.product.command.domain.option.OptionType;
 import io.restassured.RestAssured;
@@ -29,10 +28,7 @@ public class OptionSteps {
                 "원하시는 색상을 선택해주세요",
                 OptionType.SELECT,
                 BigDecimal.valueOf(1000),
-                List.of(
-                        new OptionChoiceCommand("빨강"),
-                        new OptionChoiceCommand("파랑")
-                )
+                List.of("빨강", "파랑")
         );
     }
 
@@ -67,10 +63,7 @@ public class OptionSteps {
                 "원하시는 컬러를 선택해주세요",
                 OptionType.SELECT,
                 BigDecimal.valueOf(1000),
-                List.of(
-                        new OptionChoiceCommand("레드"),
-                        new OptionChoiceCommand("블루")
-                )
+                List.of("레드", "블루")
         );
     }
 
