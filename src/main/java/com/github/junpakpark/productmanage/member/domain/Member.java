@@ -29,7 +29,7 @@ public class Member extends BaseEntity {
     @Embedded
     private Password password;
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, columnDefinition = "varchar(20)")
     private Role role;
 
     public Member(
