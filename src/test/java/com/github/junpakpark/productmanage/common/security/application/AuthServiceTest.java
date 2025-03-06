@@ -2,15 +2,13 @@ package com.github.junpakpark.productmanage.common.security.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.github.junpakpark.productmanage.common.domain.Role;
+import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
 import com.github.junpakpark.productmanage.common.security.adaptor.out.token.JwtProperties;
 import com.github.junpakpark.productmanage.common.security.adaptor.out.token.JwtTokenProvider;
 import com.github.junpakpark.productmanage.common.security.adaptor.out.token.JwtTokenValidator;
-import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
 import com.github.junpakpark.productmanage.common.security.application.dto.TokenPair;
 import com.github.junpakpark.productmanage.common.security.application.port.out.persistence.RefreshTokenStore;
-import com.github.junpakpark.productmanage.common.domain.Role;
-import java.util.HashMap;
-import java.util.Map;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +27,7 @@ class AuthServiceTest {
                 3600000L,
                 86400000L
         );
-        refreshTokenStore = getFakeRefreshTokenStore();
+        refreshTokenStore = new FakeRefreshTokenStore();
         sut = new AuthService(new JwtTokenProvider(jwtProperties), new JwtTokenValidator(secretKey), refreshTokenStore);
     }
 
@@ -86,28 +84,4 @@ class AuthServiceTest {
         assertThat(refreshTokenStore.findByRefreshToken(refreshToken)).isNull();
     }
 
-    private RefreshTokenStore getFakeRefreshTokenStore() {
-        return new RefreshTokenStore() {
-
-            private final Map<String, MemberInfo> store = new HashMap<>();
-
-            @Override
-            public void save(final String refreshToken, final MemberInfo memberInfo) {
-                store.put(refreshToken, memberInfo);
-            }
-
-            @Override
-            public void remove(final String refreshToken) {
-                store.remove(refreshToken);
-            }
-
-            @Override
-            public MemberInfo findByRefreshToken(final String refreshToken) {
-                if (!store.containsKey(refreshToken)) {
-                    return null;
-                }
-                return store.get(refreshToken);
-            }
-        };
-    }
 }
