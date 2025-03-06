@@ -23,6 +23,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             final HttpServletResponse response,
             final Object handler
     ) throws AuthenticationException {
+        if (isExcludedGetRequest(request)) {
+            return true;
+        }
+
         final String token = AuthorizationHeaderExtractor.extractToken(request);
         tokenValidator.validateToken(token);
 
@@ -36,5 +40,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         }
 
         return true;
+    }
+
+    private boolean isExcludedGetRequest(HttpServletRequest request) {
+        return "GET".equals(request.getMethod()) && request.getRequestURI().startsWith("/api/products");
     }
 }
