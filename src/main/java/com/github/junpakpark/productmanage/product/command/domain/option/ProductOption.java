@@ -53,7 +53,7 @@ public abstract class ProductOption extends BaseEntity {
 
     public abstract List<OptionChoice> optionChoices();
 
-    public boolean isSame(final Long optionId) {
+    public boolean hasSameId(final Long optionId) {
         return Objects.equals(this.id, optionId);
     }
 
@@ -82,6 +82,25 @@ public abstract class ProductOption extends BaseEntity {
     private void validateNonNull(final Name name, final Money additionalPrice) {
         Objects.requireNonNull(name, "옵션명은 null이 될 수 없습니다.");
         Objects.requireNonNull(additionalPrice, "추가 요금은 null이 될 수 없습니다.");
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof ProductOption otherOption)) {
+            return false;
+        }
+        if (Objects.isNull(getId()) || Objects.isNull(otherOption.getId())) {
+            return false;
+        }
+        return getId().equals(otherOption.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getId() == null ? super.hashCode() : getId().hashCode();
     }
 
 }

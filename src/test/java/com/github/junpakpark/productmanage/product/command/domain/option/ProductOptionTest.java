@@ -98,7 +98,7 @@ class ProductOptionTest {
             ReflectionTestUtils.setField(sut, "id", optionId);
 
             // Action
-            final boolean isSame = sut.isSame(optionId);
+            final boolean isSame = sut.hasSameId(optionId);
 
             // Assert
             assertThat(isSame).isTrue();
@@ -112,7 +112,7 @@ class ProductOptionTest {
             ReflectionTestUtils.setField(sut, "id", optionId);
 
             // Action
-            final boolean isSame = sut.isSame(2L);
+            final boolean isSame = sut.hasSameId(2L);
 
             // Assert
             assertThat(isSame).isFalse();
@@ -180,6 +180,51 @@ class ProductOptionTest {
 
             // Assert
             assertThat(sut.getProduct()).isNull();
+        }
+    }
+
+    @Nested
+    class EqualsAndHashCodeTests {
+
+        @Test
+        @DisplayName("동일 ID면 equals true")
+        void sameId() {
+            // Arrange
+            ReflectionTestUtils.setField(sut, "id", 1L);
+            final InputOption other = new InputOption(name, price);
+            ReflectionTestUtils.setField(other, "id", 1L);
+
+            // Assert
+            assertThat(sut).isEqualTo(other)
+                    .hasSameHashCodeAs(other);
+        }
+
+        @Test
+        @DisplayName("ID가 다르면 equals false")
+        void differentId() {
+            // Arrange
+            ReflectionTestUtils.setField(sut, "id", 1L);
+            final InputOption other = new InputOption(name, price);
+            ReflectionTestUtils.setField(other, "id", 2L);
+
+            // Assert
+            SoftAssertions.assertSoftly(softly -> {
+                assertThat(sut).isNotEqualTo(other);
+                assertThat(sut.hashCode()).isNotEqualTo(other.hashCode());
+            });
+        }
+
+        @Test
+        @DisplayName("ID가 null인 경우 equals false")
+        void nullId() {
+            // Arrange
+            final InputOption other = new InputOption(name, price);
+
+            // Assert
+            SoftAssertions.assertSoftly(softly -> {
+                assertThat(sut).isNotEqualTo(other);
+                assertThat(sut.hashCode()).isNotEqualTo(other.hashCode());
+            });
         }
     }
 
