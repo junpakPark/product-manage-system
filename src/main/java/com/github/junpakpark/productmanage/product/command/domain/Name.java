@@ -10,29 +10,29 @@ import lombok.NoArgsConstructor;
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProductName {
+public class Name {
 
     private static final int MAX_LENGTH = 100;
 
     @Column(length = 100, nullable = false)
-    private String name;
+    private String value;
 
 
-    public ProductName(final String name) {
-        validateBlank(name);
-        validateLength(name);
-        this.name = name;
+    public Name(final String value) {
+        validateBlank(value);
+        validateLength(value);
+        this.value = value;
     }
 
     private void validateBlank(final String value) {
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException("상품명은 비어있을 수 없습니다.");
+            throw new IllegalArgumentException("이름은 비어있을 수 없습니다.");
         }
     }
 
     private void validateLength(final String value) {
         if (value.length() > MAX_LENGTH) {
-            throw new IllegalArgumentException("상품명은 최대 %d자 이하여야 합니다.".formatted(MAX_LENGTH));
+            throw new IllegalArgumentException("이름은 최대 %d자 이하여야 합니다.".formatted(MAX_LENGTH));
         }
     }
 
@@ -41,17 +41,17 @@ public class ProductName {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final ProductName that = (ProductName) o;
-        return Objects.equals(name, that.name);
+        final Name that = (Name) o;
+        return Objects.equals(value, that.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(name);
+        return Objects.hashCode(value);
     }
 
     @Override
     public String toString() {
-        return "ProductName= %s".formatted(name);
+        return "Name {%s}".formatted(value);
     }
 }

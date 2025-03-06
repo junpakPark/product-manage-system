@@ -19,7 +19,7 @@ class ProductInfoTest {
         @DisplayName("정상 값으로 생성 성공")
         void success() {
             // Arrange
-            final ProductName name = new ProductName("상품명");
+            final Name name = new Name("상품명");
             final String description = "정상 설명";
             final Money price = new Money(BigDecimal.valueOf(1000));
             final Money shippingFee = new Money(BigDecimal.valueOf(500));
@@ -55,7 +55,7 @@ class ProductInfoTest {
         @DisplayName("price가 null이면 예외 발생")
         void nullPrice() {
             // Arrange
-            final ProductName name = new ProductName("상품명");
+            final Name name = new Name("상품명");
             final String description = "정상 설명";
             final Money shippingFee = new Money(BigDecimal.valueOf(500));
 
@@ -70,7 +70,7 @@ class ProductInfoTest {
         @DisplayName("shippingFee가 null이면 예외 발생")
         void nullShippingFee() {
             // Arrange
-            final ProductName name = new ProductName("상품명");
+            final Name name = new Name("상품명");
             final String description = "정상 설명";
             final Money price = new Money(BigDecimal.valueOf(1000));
 
@@ -85,7 +85,7 @@ class ProductInfoTest {
         @DisplayName("description이 500자를 초과하면 예외 발생")
         void tooLongDescription() {
             // Arrange
-            final ProductName name = new ProductName("상품명");
+            final Name name = new Name("상품명");
             final String longDescription = "a".repeat(501);
             final Money price = new Money(BigDecimal.valueOf(1000));
             final Money shippingFee = new Money(BigDecimal.valueOf(500));
@@ -106,7 +106,7 @@ class ProductInfoTest {
         @DisplayName("동일한 정보면 동등하다")
         void equals() {
             // Arrange
-            final ProductName name = new ProductName("상품명");
+            final Name name = new Name("상품명");
             final String description = "설명";
             final Money price = new Money(BigDecimal.valueOf(1000));
             final Money shippingFee = new Money(BigDecimal.valueOf(500));
@@ -124,8 +124,8 @@ class ProductInfoTest {
         @DisplayName("다른 정보면 동등하지 않다")
         void notEquals() {
             // Arrange
-            final ProductName name = new ProductName("상품명");
-            final ProductName differentName = new ProductName("다른상품명");
+            final Name name = new Name("상품명");
+            final Name differentName = new Name("다른상품명");
             final String description = "설명";
             final Money price = new Money(BigDecimal.valueOf(1000));
             final Money shippingFee = new Money(BigDecimal.valueOf(500));
@@ -145,7 +145,7 @@ class ProductInfoTest {
         @DisplayName("toString 결과에 주요 정보가 포함된다")
         void toStringTest() {
             // Arrange
-            final ProductName name = new ProductName("상품명");
+            final Name name = new Name("상품명");
             final String description = "설명";
             final Money price = new Money(BigDecimal.valueOf(1000));
             final Money shippingFee = new Money(BigDecimal.valueOf(500));

@@ -115,7 +115,7 @@ class ProductTest {
             // Arrange
             final ProductInfo initialInfo = createProductInfo();
             final ProductInfo newInfo = new ProductInfo(
-                    new ProductName("새 상품명"),
+                    new Name("새 상품명"),
                     "새 설명",
                     new Money(BigDecimal.valueOf(3000)),
                     new Money(BigDecimal.valueOf(150))
@@ -145,7 +145,7 @@ class ProductTest {
 
     private ProductInfo createProductInfo() {
         return new ProductInfo(
-                new ProductName("상품명"),
+                new Name("상품명"),
                 "상품 설명",
                 new Money(BigDecimal.valueOf(1000)),
                 new Money(BigDecimal.valueOf(100))

@@ -2,7 +2,7 @@ package com.github.junpakpark.productmanage.product.command.application.port.in.
 
 import com.github.junpakpark.productmanage.product.command.domain.Money;
 import com.github.junpakpark.productmanage.product.command.domain.ProductInfo;
-import com.github.junpakpark.productmanage.product.command.domain.ProductName;
+import com.github.junpakpark.productmanage.product.command.domain.Name;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,7 +23,7 @@ public record UpdateProductCommand(
 ) {
     public ProductInfo toProductInfo() {
         return new ProductInfo(
-                new ProductName(name),
+                new Name(name),
                 description,
                 new Money(price),
                 new Money(shippingFee)

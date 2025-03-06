@@ -15,7 +15,8 @@ import lombok.NoArgsConstructor;
 public class ProductInfo {
 
     @Embedded
-    private ProductName name;
+    @AttributeOverride(name = "value", column = @Column(name = "name"))
+    private Name name;
     @Column(length = 500)
     private String description;
     @Embedded
@@ -26,7 +27,7 @@ public class ProductInfo {
     private Money shippingFee;
 
     public ProductInfo(
-            final ProductName name,
+            final Name name,
             final String description,
             final Money price,
             final Money shippingFee
@@ -39,7 +40,7 @@ public class ProductInfo {
         this.shippingFee = shippingFee;
     }
 
-    private void validateNotNull(final ProductName name, final Money price, final Money shippingFee) {
+    private void validateNotNull(final Name name, final Money price, final Money shippingFee) {
         Objects.requireNonNull(name, "상품명은 필수입니다.");
         Objects.requireNonNull(price, "상품 가격은 필수입니다.");
         Objects.requireNonNull(shippingFee, "배송비는 필수입니다.");
