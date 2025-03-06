@@ -1,8 +1,7 @@
 package com.github.junpakpark.productmanage.product.command;
 
 import com.github.junpakpark.productmanage.common.security.application.dto.TokenPair;
-import com.github.junpakpark.productmanage.product.command.application.port.in.web.CreateProductCommand;
-import com.github.junpakpark.productmanage.product.command.application.port.in.web.UpdateProductCommand;
+import com.github.junpakpark.productmanage.product.command.application.port.in.web.ProductCommand;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -12,8 +11,8 @@ import org.springframework.http.MediaType;
 @SuppressWarnings("NonAsciiCharacters")
 public class ProductSteps {
 
-    public static CreateProductCommand 상품생성요청_생성() {
-        return new CreateProductCommand(
+    public static ProductCommand 상품생성요청_생성() {
+        return new ProductCommand(
                 "상품명",
                 "상품 설명",
                 BigDecimal.valueOf(1000L),
@@ -21,7 +20,7 @@ public class ProductSteps {
         );
     }
 
-    public static ExtractableResponse<Response> 상품생성요청(final TokenPair tokenPair, final CreateProductCommand request) {
+    public static ExtractableResponse<Response> 상품생성요청(final TokenPair tokenPair, final ProductCommand request) {
         return RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + tokenPair.accessToken())
                 .cookie("refresh-token", tokenPair.refreshToken())
@@ -34,8 +33,8 @@ public class ProductSteps {
                 .extract();
     }
 
-    public static UpdateProductCommand 상품수정요청_생성() {
-        return new UpdateProductCommand(
+    public static ProductCommand 상품수정요청_생성() {
+        return new ProductCommand(
                 "새상품명",
                 "새로운 상품 설명",
                 BigDecimal.valueOf(2000L),
@@ -46,7 +45,7 @@ public class ProductSteps {
     public static ExtractableResponse<Response> 상품수정요청(
             final TokenPair tokenPair,
             final Long productId,
-            final UpdateProductCommand request
+            final ProductCommand request
     ) {
         return RestAssured.given().log().all()
                 .header("Authorization", "Bearer " + tokenPair.accessToken())

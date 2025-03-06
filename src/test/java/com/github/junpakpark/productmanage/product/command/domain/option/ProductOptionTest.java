@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.github.junpakpark.productmanage.product.command.domain.Money;
 import com.github.junpakpark.productmanage.product.command.domain.Name;
 import com.github.junpakpark.productmanage.product.command.domain.Product;
-import com.github.junpakpark.productmanage.product.command.domain.ProductInfo;
 import java.math.BigDecimal;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -127,12 +126,10 @@ class ProductOptionTest {
         @BeforeEach
         void setUp() {
             product = new Product(
-                    new ProductInfo(
-                            new Name("상품명"),
-                            "상품 설명",
-                            new Money(BigDecimal.valueOf(1000)),
-                            new Money(BigDecimal.valueOf(100))
-                    ),
+                    new Name("상품명"),
+                    "상품 설명",
+                    new Money(BigDecimal.valueOf(1000)),
+                    new Money(BigDecimal.valueOf(100)),
                     1L
             );
         }
@@ -153,12 +150,10 @@ class ProductOptionTest {
             // Arrange
             sut.associatedWith(product);
             final Product secondProduct = new Product(
-                    new ProductInfo(
-                            new Name("다른 상품명"),
-                            "다른 상품 설명",
-                            new Money(BigDecimal.valueOf(1000)),
-                            new Money(BigDecimal.valueOf(100))
-                    ),
+                    new Name("다른 상품명"),
+                    "다른 상품 설명",
+                    new Money(BigDecimal.valueOf(1000)),
+                    new Money(BigDecimal.valueOf(100)),
                     2L
             );
 

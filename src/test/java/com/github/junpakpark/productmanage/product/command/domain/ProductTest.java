@@ -20,15 +20,21 @@ import org.springframework.test.util.ReflectionTestUtils;
 class ProductTest {
 
     private Product sut;
-    private ProductInfo productInfo;
     private Long memberId;
+    private Name name;
+    private String description;
+    private Money price;
+    private Money shippingFee;
 
     @BeforeEach
     void setUp() {
         // Arrange
-        productInfo = createProductInfo();
         memberId = 1L;
-        sut = new Product(productInfo, memberId);
+        name = new Name("상품명");
+        description = "상품 설명";
+        price = new Money(BigDecimal.valueOf(1000));
+        shippingFee = new Money(BigDecimal.valueOf(100));
+        sut = new Product(name, description, price, shippingFee, memberId);
     }
 
     @Nested
@@ -39,19 +45,55 @@ class ProductTest {
         void success() {
             // Assert
             SoftAssertions.assertSoftly(softly -> {
-                assertThat(sut.getProductInfo()).isEqualTo(productInfo);
+                assertThat(sut.getName()).isEqualTo(name);
+                assertThat(sut.getDescription()).isEqualTo(description);
+                assertThat(sut.getPrice()).isEqualTo(price);
+                assertThat(sut.getShippingFee()).isEqualTo(shippingFee);
                 assertThat(sut.getMemberId()).isEqualTo(memberId);
             });
         }
 
         @Test
-        @DisplayName("productInfo가 null이면 예외가 발생한다.")
-        void nullProductInfo() {
+        @DisplayName("name이 null이면 예외 발생")
+        void nullName() {
             // Action
             // Assert
-            assertThatThrownBy(() -> new Product(null, memberId))
+            assertThatThrownBy(() -> new Product(null, description, price, shippingFee, memberId))
                     .isInstanceOf(NullPointerException.class)
-                    .hasMessage("상품 정보는 필수입니다.");
+                    .hasMessage("상품명은 필수입니다.");
+        }
+
+        @Test
+        @DisplayName("price가 null이면 예외 발생")
+        void nullPrice() {
+            // Action
+            // Assert
+            assertThatThrownBy(() -> new Product(name, description, null, shippingFee, memberId))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("상품 가격은 필수입니다.");
+        }
+
+        @Test
+        @DisplayName("shippingFee가 null이면 예외 발생")
+        void nullShippingFee() {
+            // Action
+            // Assert
+            assertThatThrownBy(() -> new Product(name, description, price, null, memberId))
+                    .isInstanceOf(NullPointerException.class)
+                    .hasMessage("배송비는 필수입니다.");
+        }
+
+        @Test
+        @DisplayName("description이 500자를 초과하면 예외 발생")
+        void tooLongDescription() {
+            // Arrange
+            final String longDescription = "a".repeat(501);
+
+            // Action
+            // Assert
+            assertThatThrownBy(() -> new Product(name, longDescription, price, shippingFee, memberId))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("상품 설명은 최대 500자까지 가능합니다.");
         }
 
         @Test
@@ -59,7 +101,7 @@ class ProductTest {
         void nullMemberId() {
             // Action
             // Assert
-            assertThatThrownBy(() -> new Product(productInfo, null))
+            assertThatThrownBy(() -> new Product(name, description, price, shippingFee, null))
                     .isInstanceOf(NullPointerException.class)
                     .hasMessage("판매자 id는 필수입니다.");
         }
@@ -70,7 +112,7 @@ class ProductTest {
         void zeroOrNegativeMemberId(final Long memberId) {
             // Action
             // Assert
-            assertThatThrownBy(() -> new Product(productInfo, memberId))
+            assertThatThrownBy(() -> new Product(name, description, price, shippingFee, memberId))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("id는 1보다 커야합니다.");
         }
@@ -108,18 +150,22 @@ class ProductTest {
         @DisplayName("상품 정보를 새 정보로 변경할 수 있다.")
         void success() {
             // Arrange
-            final ProductInfo newInfo = new ProductInfo(
-                    new Name("새 상품명"),
-                    "새 설명",
-                    new Money(BigDecimal.valueOf(3000)),
-                    new Money(BigDecimal.valueOf(150))
-            );
+            final Name newName = new Name("새 상품명");
+            final String newDescription = "새 설명";
+            final Money newPrice = new Money(BigDecimal.valueOf(3000));
+            final Money newShippingFee = new Money(BigDecimal.valueOf(150));
+            final Product updatedProduct = new Product(newName, newDescription, newPrice, newShippingFee, memberId);
 
             // Action
-            sut.updateInfo(newInfo);
+            sut.update(updatedProduct);
 
             // Assert
-            assertThat(sut.getProductInfo()).isEqualTo(newInfo);
+            SoftAssertions.assertSoftly(softly -> {
+                assertThat(sut.getName()).isEqualTo(newName);
+                assertThat(sut.getDescription()).isEqualTo(newDescription);
+                assertThat(sut.getPrice()).isEqualTo(newPrice);
+                assertThat(sut.getShippingFee()).isEqualTo(newShippingFee);
+            });
         }
 
         @Test
@@ -127,9 +173,9 @@ class ProductTest {
         void fail() {
             // Action
             // Assert
-            assertThatThrownBy(() -> sut.updateInfo(null))
+            assertThatThrownBy(() -> sut.update(null))
                     .isInstanceOf(NullPointerException.class)
-                    .hasMessage("상품 정보는 필수입니다.");
+                    .hasMessage("수정 정보는 null일 수 없습니다.");
         }
     }
 
@@ -156,7 +202,7 @@ class ProductTest {
         @DisplayName("다른 상품에 이미 연관된 옵션을 추가하려 하면 예외가 발생한다")
         void fail() {
             // Arrange
-            final Product otherProduct = new Product(createProductInfo(), 2L);
+            final Product otherProduct = new Product(name, description, price, shippingFee, 2L);
             final ProductOption option = createOption(1L);
             otherProduct.addOption(option);
 
@@ -209,16 +255,16 @@ class ProductTest {
         @DisplayName("상품의 옵션을 수정할 수 있다")
         void success() {
             // Arrange
-            final ProductOption option = createOption(1L, "원래 옵션명");
+            final ProductOption option = createOption("원래 옵션명");
             sut.addOption(option);
 
-            final ProductOption updatedOption = createOption(1L, "수정된 옵션명");
+            final ProductOption updatedOption = createOption("수정된 옵션명");
 
             // Action
             sut.updateOption(1L, updatedOption);
 
             // Assert
-            final ProductOption result = sut.getProductOptions().getOptions().get(0);
+            final ProductOption result = sut.getProductOptions().getOptions().getFirst();
             assertThat(result.getName()).isEqualTo(new Name("수정된 옵션명"));
         }
 
@@ -236,24 +282,15 @@ class ProductTest {
         }
     }
 
-    private ProductInfo createProductInfo() {
-        return new ProductInfo(
-                new Name("상품명"),
-                "상품 설명",
-                new Money(BigDecimal.valueOf(1000)),
-                new Money(BigDecimal.valueOf(100))
-        );
-    }
-
     private ProductOption createOption(final Long id) {
         final ProductOption option = new InputOption(new Name("옵션명" + id), new Money(BigDecimal.valueOf(500)));
         ReflectionTestUtils.setField(option, "id", id);
         return option;
     }
 
-    private ProductOption createOption(final Long id, final String name) {
+    private ProductOption createOption(final String name) {
         final ProductOption option = new InputOption(new Name(name), new Money(BigDecimal.valueOf(500)));
-        ReflectionTestUtils.setField(option, "id", id);
+        ReflectionTestUtils.setField(option, "id", 1L);
         return option;
     }
 

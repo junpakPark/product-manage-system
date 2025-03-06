@@ -3,8 +3,7 @@ package com.github.junpakpark.productmanage.product.command.adapter.in.web;
 import com.github.junpakpark.productmanage.common.resolver.memberinfo.AuthMember;
 import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
 import com.github.junpakpark.productmanage.product.command.application.port.in.ProductUseCase;
-import com.github.junpakpark.productmanage.product.command.application.port.in.web.CreateProductCommand;
-import com.github.junpakpark.productmanage.product.command.application.port.in.web.UpdateProductCommand;
+import com.github.junpakpark.productmanage.product.command.application.port.in.web.ProductCommand;
 import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,7 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<Void> createProduct(
             @AuthMember final MemberInfo memberInfo,
-            @Valid @RequestBody final CreateProductCommand request,
+            @Valid @RequestBody final ProductCommand request,
             final UriComponentsBuilder uriComponentsBuilder
     ) {
         final Long productId = productUseCase.create(memberInfo, request);
@@ -43,7 +42,7 @@ public class ProductController {
     public ResponseEntity<Void> updateProduct(
             @AuthMember final MemberInfo memberInfo,
             @PathVariable final Long productId,
-            @Valid @RequestBody final UpdateProductCommand request
+            @Valid @RequestBody final ProductCommand request
     ) {
         productUseCase.update(memberInfo, productId, request);
 
