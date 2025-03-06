@@ -7,7 +7,6 @@ import com.github.junpakpark.productmanage.common.domain.Role;
 import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
 import com.github.junpakpark.productmanage.product.command.OptionSteps;
 import com.github.junpakpark.productmanage.product.command.ProductSteps;
-import com.github.junpakpark.productmanage.product.command.application.port.in.web.OptionChoiceCommand;
 import com.github.junpakpark.productmanage.product.command.application.port.in.web.OptionCommand;
 import com.github.junpakpark.productmanage.product.command.application.port.in.web.ProductCommand;
 import com.github.junpakpark.productmanage.product.command.domain.Money;
@@ -464,7 +463,7 @@ class ProductServiceTest {
                         "원하시는 문구를 입력해주세요",
                         OptionType.SELECT,
                         BigDecimal.valueOf(1000),
-                        List.of(new OptionChoiceCommand("만수무강하세요"), new OptionChoiceCommand("생일축하합니다."))
+                        List.of("만수무강하세요", "생일축하합니다.")
                 );
 
                 // Action
