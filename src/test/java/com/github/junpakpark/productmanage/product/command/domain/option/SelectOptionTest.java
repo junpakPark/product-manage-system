@@ -19,21 +19,28 @@ class SelectOptionTest {
     private SelectOption sut;
     private Name name;
     private Money additionalPrice;
+    private List<OptionChoice> choices;
 
     @BeforeEach
     void setUp() {
         name = new Name("색상 선택");
         additionalPrice = new Money(BigDecimal.valueOf(1000));
-        sut = new SelectOption(name, additionalPrice);
+        choices = List.of(
+                new OptionChoice("파랑"),
+                new OptionChoice("빨강")
+        );
+        sut = new SelectOption(name, additionalPrice, choices);
     }
 
     @Test
     @DisplayName("정상적으로 생성할 수 있다")
-    void createSuccess() {
+    void create() {
         // Assert
         SoftAssertions.assertSoftly(softly -> {
             assertThat(sut.getName()).isEqualTo(name);
             assertThat(sut.getAdditionalPrice()).isEqualTo(additionalPrice);
+            assertThat(sut.optionChoices()).contains(choices.get(0), choices.get(1));
+            assertThat(sut.getOptionType()).isEqualTo(OptionType.SELECT);
         });
     }
 
@@ -44,7 +51,7 @@ class SelectOptionTest {
         @DisplayName("선택지를 교체하면 해당 선택지들이 저장된다")
         void updateChoices() {
             // Arrange
-            final List<OptionChoice> choices = List.of(
+            choices = List.of(
                     new OptionChoice("파랑"),
                     new OptionChoice("빨강")
             );
@@ -71,11 +78,11 @@ class SelectOptionTest {
         @DisplayName("선택지를 업데이트 시, 빈 선택지면 예외가 발생한다")
         void emptyChoices() {
             // Arrange
-            final List<OptionChoice> choices = Collections.emptyList();
+            final List<OptionChoice> emptyChoices = Collections.emptyList();
 
             // Action
             // Assert
-            assertThatThrownBy(() -> sut.replaceChoices(choices))
+            assertThatThrownBy(() -> sut.replaceChoices(emptyChoices))
                     .isInstanceOf(IllegalArgumentException.class)
                     .hasMessage("선택지가 적어도 하나는 있어야합니다.");
         }

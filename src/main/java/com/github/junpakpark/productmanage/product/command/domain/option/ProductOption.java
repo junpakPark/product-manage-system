@@ -53,6 +53,8 @@ public abstract class ProductOption extends BaseEntity {
 
     public abstract List<OptionChoice> optionChoices();
 
+    public abstract OptionType getOptionType();
+
     public boolean hasSameId(final Long optionId) {
         return Objects.equals(this.id, optionId);
     }

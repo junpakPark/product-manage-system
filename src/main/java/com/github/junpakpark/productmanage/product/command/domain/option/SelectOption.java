@@ -24,8 +24,9 @@ public class SelectOption extends ProductOption {
     @CollectionTable(name = "option_choice", joinColumns = @JoinColumn(name = "select_option_id"))
     private Set<OptionChoice> choices = new HashSet<>();
 
-    public SelectOption(final Name name, final Money additionalPrice) {
+    public SelectOption(final Name name, final Money additionalPrice, final List<OptionChoice> optionChoices) {
         super(name, additionalPrice);
+        replaceChoices(optionChoices);
     }
 
     @Override
@@ -39,6 +40,11 @@ public class SelectOption extends ProductOption {
         return choices.stream()
                 .sorted(Comparator.comparing(OptionChoice::getValue))
                 .toList();
+    }
+
+    @Override
+    public OptionType getOptionType() {
+        return OptionType.SELECT;
     }
 
     private void validateChoices(final List<OptionChoice> optionChoices) {

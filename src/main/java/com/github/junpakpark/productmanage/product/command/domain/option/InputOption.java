@@ -31,4 +31,9 @@ public class InputOption extends ProductOption {
         return Collections.emptyList();
     }
 
+    @Override
+    public OptionType getOptionType() {
+        return OptionType.INPUT;
+    }
+
 }
