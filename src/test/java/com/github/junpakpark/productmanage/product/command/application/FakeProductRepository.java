@@ -22,7 +22,10 @@ class FakeProductRepository implements ProductRepository {
     @Override
     public Product save(final Product product) {
         final Product savedProduct = new Product(
-                product.getProductInfo(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getShippingFee(),
                 product.getMemberId()
         );
         ReflectionTestUtils.setField(savedProduct, "id", sequence++);

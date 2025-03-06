@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 
-class ProductNameTest {
+class NameTest {
 
     @Nested
     class CreationTests {
@@ -21,10 +21,10 @@ class ProductNameTest {
             final String validName = "Valid Product Name";
 
             // Action
-            final ProductName productName = new ProductName(validName);
+            final Name sut = new Name(validName);
 
             // Assert
-            assertThat(productName.getName()).isEqualTo(validName);
+            assertThat(sut.getValue()).isEqualTo(validName);
         }
 
 
@@ -36,9 +36,9 @@ class ProductNameTest {
 
             // Action
             // Assert
-            assertThatThrownBy(() -> new ProductName(nullName))
+            assertThatThrownBy(() -> new Name(nullName))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("상품명은 비어있을 수 없습니다.");
+                    .hasMessage("이름은 비어있을 수 없습니다.");
         }
 
         @Test
@@ -49,9 +49,9 @@ class ProductNameTest {
 
             // Action
             // Assert
-            assertThatThrownBy(() -> new ProductName(blankName))
+            assertThatThrownBy(() -> new Name(blankName))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("상품명은 비어있을 수 없습니다.");
+                    .hasMessage("이름은 비어있을 수 없습니다.");
         }
 
         @Test
@@ -62,9 +62,9 @@ class ProductNameTest {
 
             // Action
             // Assert
-            assertThatThrownBy(() -> new ProductName(tooLongName))
+            assertThatThrownBy(() -> new Name(tooLongName))
                     .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("상품명은 최대 100자 이하여야 합니다.");
+                    .hasMessage("이름은 최대 100자 이하여야 합니다.");
         }
 
     }
@@ -76,8 +76,8 @@ class ProductNameTest {
         @DisplayName("동일한 이름을 가진 두 객체는 동등하다.")
         void sameName() {
             // Arrange
-            final ProductName name1 = new ProductName("Product A");
-            final ProductName name2 = new ProductName("Product A");
+            final Name name1 = new Name("Product A");
+            final Name name2 = new Name("Product A");
 
             // Action
             // Assert
@@ -90,8 +90,8 @@ class ProductNameTest {
         @DisplayName("서로 다른 이름을 가진 두 객체는 동등하지 않다.")
         void differentName() {
             // Arrange
-            final ProductName name1 = new ProductName("Product A");
-            final ProductName name2 = new ProductName("Product B");
+            final Name name1 = new Name("Product A");
+            final Name name2 = new Name("Product B");
 
             // Action
             // Assert
@@ -107,12 +107,12 @@ class ProductNameTest {
     void ToStringTest() {
         // Arrange
         final String name = "Sample Product";
-        final ProductName productName = new ProductName(name);
+        final Name sut = new Name(name);
 
         // Act
-        final String result = productName.toString();
+        final String result = sut.toString();
 
         // Assert
-        assertThat(result).isEqualTo("ProductName= Sample Product");
+        assertThat(result).isEqualTo("Name {Sample Product}");
     }
 }
