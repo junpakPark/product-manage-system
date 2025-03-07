@@ -7,6 +7,8 @@ import static org.mockito.Mockito.when;
 
 import com.github.junpakpark.productmanage.common.domain.Role;
 import com.github.junpakpark.productmanage.common.security.application.port.out.token.TokenValidator;
+import com.github.junpakpark.productmanage.common.security.exception.HeaderErrorCode;
+import com.github.junpakpark.productmanage.common.security.exception.HeaderUnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -111,7 +113,8 @@ class MemberInfoArgumentResolverTest {
 
             // Act & Assert
             assertThatThrownBy(() -> sut.resolveArgument(methodParameter, mavContainer, webRequest, binderFactory))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(HeaderUnauthorizedException.class)
+                    .hasMessage(HeaderErrorCode.AUTHORIZATION_HEADER_MISSING.getMessage());
         }
 
         @Test
@@ -123,7 +126,8 @@ class MemberInfoArgumentResolverTest {
 
             // Act & Assert
             assertThatThrownBy(() -> sut.resolveArgument(methodParameter, mavContainer, webRequest, binderFactory))
-                    .isInstanceOf(IllegalArgumentException.class);
+                    .isInstanceOf(HeaderUnauthorizedException.class)
+                    .hasMessage(HeaderErrorCode.AUTHORIZATION_HEADER_INVALID.getMessage());
         }
     }
 

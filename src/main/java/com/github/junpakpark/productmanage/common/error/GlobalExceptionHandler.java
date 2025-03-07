@@ -2,7 +2,7 @@ package com.github.junpakpark.productmanage.common.error;
 
 import com.github.junpakpark.productmanage.common.error.exception.ForbiddenException.RoleForbiddenException;
 import com.github.junpakpark.productmanage.common.error.exception.GlobalException;
-import com.github.junpakpark.productmanage.common.security.exception.TokenUnauthorizedException;
+import com.github.junpakpark.productmanage.common.error.exception.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -45,9 +45,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(errorResponse);
     }
 
-    @ExceptionHandler(TokenUnauthorizedException.class)
+    @ExceptionHandler(UnauthorizedException.class)
     protected ResponseEntity<ErrorResponse> handleTokenUnauthorizedException(
-            final TokenUnauthorizedException e,
+            final UnauthorizedException e,
             final HttpServletRequest request
     ) {
         final ErrorCode<?> errorCode = e.getErrorCode();

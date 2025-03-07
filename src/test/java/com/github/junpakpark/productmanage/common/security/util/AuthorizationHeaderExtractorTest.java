@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.github.junpakpark.productmanage.common.security.exception.HeaderErrorCode;
+import com.github.junpakpark.productmanage.common.security.exception.HeaderUnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -62,8 +64,8 @@ class AuthorizationHeaderExtractorTest {
 
             // Action & Assert
             assertThatThrownBy(() -> AuthorizationHeaderExtractor.extractToken(request))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("Authorization header is missing");
+                    .isInstanceOf(HeaderUnauthorizedException.class)
+                    .hasMessage(HeaderErrorCode.AUTHORIZATION_HEADER_MISSING.getMessage());
         }
 
         @Test
@@ -74,8 +76,8 @@ class AuthorizationHeaderExtractorTest {
 
             // Action & Assert
             assertThatThrownBy(() -> AuthorizationHeaderExtractor.extractToken(request))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("Authorization header is missing");
+                    .isInstanceOf(HeaderUnauthorizedException.class)
+                    .hasMessage(HeaderErrorCode.AUTHORIZATION_HEADER_MISSING.getMessage());
         }
 
         @Test
@@ -86,8 +88,8 @@ class AuthorizationHeaderExtractorTest {
 
             // Action & Assert
             assertThatThrownBy(() -> AuthorizationHeaderExtractor.extractToken(request))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("Authorization header is invalid");
+                    .isInstanceOf(HeaderUnauthorizedException.class)
+                    .hasMessage("Authorization 헤더의 형식에 오류가 있습니다.");
         }
 
         @Test
@@ -98,8 +100,8 @@ class AuthorizationHeaderExtractorTest {
 
             // Action & Assert
             assertThatThrownBy(() -> AuthorizationHeaderExtractor.extractToken(request))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("Authorization header is invalid");
+                    .isInstanceOf(HeaderUnauthorizedException.class)
+                    .hasMessage(HeaderErrorCode.AUTHORIZATION_HEADER_INVALID.getMessage());
         }
 
     }

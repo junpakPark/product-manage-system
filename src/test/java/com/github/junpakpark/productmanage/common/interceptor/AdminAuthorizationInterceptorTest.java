@@ -9,6 +9,8 @@ import com.github.junpakpark.productmanage.common.domain.Role;
 import com.github.junpakpark.productmanage.common.error.exception.ForbiddenException.RoleForbiddenException;
 import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
 import com.github.junpakpark.productmanage.common.security.application.port.out.token.TokenValidator;
+import com.github.junpakpark.productmanage.common.security.exception.HeaderErrorCode;
+import com.github.junpakpark.productmanage.common.security.exception.HeaderUnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,7 +55,8 @@ class AdminAuthorizationInterceptorTest {
 
         // Act & Assert
         assertThatThrownBy(() -> sut.preHandle(request, response, handler))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(HeaderUnauthorizedException.class)
+                .hasMessage(HeaderErrorCode.AUTHORIZATION_HEADER_MISSING.getMessage());
     }
 
     @Test

@@ -7,6 +7,8 @@ import static org.mockito.Mockito.when;
 
 import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
 import com.github.junpakpark.productmanage.common.security.application.port.out.token.TokenValidator;
+import com.github.junpakpark.productmanage.common.security.exception.HeaderErrorCode;
+import com.github.junpakpark.productmanage.common.security.exception.HeaderUnauthorizedException;
 import com.github.junpakpark.productmanage.common.security.exception.TokenErrorCode;
 import com.github.junpakpark.productmanage.common.security.exception.TokenUnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -52,7 +54,8 @@ class AuthenticationInterceptorTest {
 
         // Action & Assert
         assertThatThrownBy(() -> sut.preHandle(request, response, handler))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(HeaderUnauthorizedException.class)
+                .hasMessage(HeaderErrorCode.AUTHORIZATION_HEADER_MISSING.getMessage());
     }
 
     @Test
