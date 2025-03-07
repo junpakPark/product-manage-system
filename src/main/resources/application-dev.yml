@@ -1,0 +1,23 @@
+spring:
+  config:
+    import: classpath:application-common.yml
+
+  datasource:
+    url: jdbc:mysql://${DB_URL}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+
+logging:
+  config: classpath:logback-dev.xml
+
+
+jwt:
+  token:
+    access-expiration-ms: 3600000  # 1시간
+    refresh-expiration-ms: 604800000  # 7일

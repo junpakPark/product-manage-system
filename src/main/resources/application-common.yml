@@ -1,0 +1,27 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
+
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
+
+  cache:
+    cache-names: refreshTokenCache
+    caffeine:
+      spec: expireAfterWrite=14d
+
+jwt:
+  token:
+    secret: ${TOKEN_SECRET_KEY:"mF9WkhY9L77NsWjN7a4aPPVVmYSHJZbXkHfH6Qh7yTg="}
+    access-expiration-ms: ${JWT_ACCESS_EXPIRATION_MS:900000}
+    refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:1209600000}
