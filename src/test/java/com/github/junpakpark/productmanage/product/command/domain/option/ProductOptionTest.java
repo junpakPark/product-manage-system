@@ -6,6 +6,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.github.junpakpark.productmanage.product.command.domain.Money;
 import com.github.junpakpark.productmanage.product.command.domain.Name;
 import com.github.junpakpark.productmanage.product.command.domain.Product;
+import com.github.junpakpark.productmanage.product.exception.OptionErrorCode;
+import com.github.junpakpark.productmanage.product.exception.ProductBadRequestException;
+import com.github.junpakpark.productmanage.product.exception.ProductConflictException;
 import java.math.BigDecimal;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,8 +50,8 @@ class ProductOptionTest {
             // Action
             // Assert
             assertThatThrownBy(() -> new InputOption(null, price))
-                    .isInstanceOf(NullPointerException.class)
-                    .hasMessage("옵션명은 null이 될 수 없습니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(OptionErrorCode.NAME_NULL_BAD_REQUEST.getMessage());
         }
 
         @Test
@@ -57,8 +60,8 @@ class ProductOptionTest {
             // Action
             // Assert
             assertThatThrownBy(() -> new InputOption(name, null))
-                    .isInstanceOf(NullPointerException.class)
-                    .hasMessageContaining("추가 요금은 null이 될 수 없습니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessageContaining(OptionErrorCode.ADDITIONAL_PRICE_NULL_BAD_REQUEST.getMessage());
         }
     }
 
@@ -160,8 +163,8 @@ class ProductOptionTest {
             // Action
             // Assert
             assertThatThrownBy(() -> sut.associatedWith(secondProduct))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("다른 상품의 옵션입니다.");
+                    .isInstanceOf(ProductConflictException.class)
+                    .hasMessage(OptionErrorCode.ASSOCIATION_CONFLICT.getMessage());
         }
 
         @Test

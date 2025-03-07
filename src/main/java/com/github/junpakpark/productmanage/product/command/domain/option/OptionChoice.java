@@ -1,5 +1,7 @@
 package com.github.junpakpark.productmanage.product.command.domain.option;
 
+import com.github.junpakpark.productmanage.product.exception.ProductBadRequestException;
+import com.github.junpakpark.productmanage.product.exception.OptionErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.util.Objects;
@@ -25,13 +27,13 @@ public class OptionChoice {
 
     private void validateBlank(final String value) {
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException("선택지는 비어있을 수 없습니다.");
+            throw new ProductBadRequestException(OptionErrorCode.CHOICE_BLANK_BAD_REQUEST);
         }
     }
 
     private void validateLength(final String value) {
         if (value.length() > MAX_LENGTH) {
-            throw new IllegalArgumentException("선택지는 최대 %d자 이하여야 합니다.".formatted(MAX_LENGTH));
+            throw new ProductBadRequestException(OptionErrorCode.CHOICE_LENGTH_BAD_REQUEST, MAX_LENGTH);
         }
     }
 

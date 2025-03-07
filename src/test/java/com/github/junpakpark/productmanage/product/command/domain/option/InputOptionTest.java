@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.github.junpakpark.productmanage.product.command.domain.Money;
 import com.github.junpakpark.productmanage.product.command.domain.Name;
+import com.github.junpakpark.productmanage.product.exception.OptionErrorCode;
+import com.github.junpakpark.productmanage.product.exception.ProductConflictException;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
@@ -69,8 +71,8 @@ class InputOptionTest {
             // Action
             // Assert
             assertThatThrownBy(() -> sut.replaceChoices(optionChoices))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("Input 옵션은 선택지를 변경할 수 없습니다.");
+                    .isInstanceOf(ProductConflictException.class)
+                    .hasMessage(OptionErrorCode.INPUT_OPTION_CONFLICT.getMessage());
         }
     }
 

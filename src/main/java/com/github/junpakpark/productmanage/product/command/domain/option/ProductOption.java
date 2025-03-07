@@ -4,6 +4,9 @@ import com.github.junpakpark.productmanage.common.domain.BaseEntity;
 import com.github.junpakpark.productmanage.product.command.domain.Money;
 import com.github.junpakpark.productmanage.product.command.domain.Name;
 import com.github.junpakpark.productmanage.product.command.domain.Product;
+import com.github.junpakpark.productmanage.product.exception.ProductBadRequestException;
+import com.github.junpakpark.productmanage.product.exception.ProductConflictException;
+import com.github.junpakpark.productmanage.product.exception.OptionErrorCode;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
@@ -78,18 +81,22 @@ public abstract class ProductOption extends BaseEntity {
 
     private void validateAssociation() {
         if (Objects.nonNull(this.product)) {
-            throw new IllegalArgumentException("다른 상품의 옵션입니다.");
+            throw new ProductConflictException(OptionErrorCode.ASSOCIATION_CONFLICT);
         }
     }
 
     private void validateNonNull(final Name name, final Money additionalPrice) {
-        Objects.requireNonNull(name, "옵션명은 null이 될 수 없습니다.");
-        Objects.requireNonNull(additionalPrice, "추가 요금은 null이 될 수 없습니다.");
+        if (Objects.isNull(name)) {
+            throw new ProductBadRequestException(OptionErrorCode.NAME_NULL_BAD_REQUEST);
+        }
+        if (Objects.isNull(additionalPrice)) {
+            throw new ProductBadRequestException(OptionErrorCode.ADDITIONAL_PRICE_NULL_BAD_REQUEST);
+        }
     }
 
     private void validateType(final OptionType optionType) {
         if (this.getOptionType().isDifferent(optionType)) {
-            throw new IllegalArgumentException("옵션 타입은 변경할 수 없습니다.");
+            throw new ProductBadRequestException(OptionErrorCode.TYPE_BAD_REQUEST);
         }
     }
 

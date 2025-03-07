@@ -1,5 +1,7 @@
 package com.github.junpakpark.productmanage.product.command.domain;
 
+import com.github.junpakpark.productmanage.product.exception.ProductBadRequestException;
+import com.github.junpakpark.productmanage.product.exception.ProductErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.math.BigDecimal;
@@ -35,13 +37,14 @@ public class Money {
 
     private void validatePositive(final BigDecimal amount) {
         if (amount.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("금액은 음수일 수 없습니다.");
+            throw new ProductBadRequestException(ProductErrorCode.PRICE_NEGATIVE_BAD_REQUEST);
         }
     }
 
     private void validateNotNull(final BigDecimal amount) {
         if (amount == null) {
-            throw new IllegalArgumentException("금액은 필수입니다.");
+            throw new ProductBadRequestException(ProductErrorCode.PRICE_BAD_REQUEST);
+
         }
     }
 

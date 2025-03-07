@@ -2,6 +2,8 @@ package com.github.junpakpark.productmanage.product.command.domain.option;
 
 import com.github.junpakpark.productmanage.product.command.domain.Money;
 import com.github.junpakpark.productmanage.product.command.domain.Name;
+import com.github.junpakpark.productmanage.product.exception.ProductBadRequestException;
+import com.github.junpakpark.productmanage.product.exception.OptionErrorCode;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.ElementCollection;
@@ -48,9 +50,11 @@ public class SelectOption extends ProductOption {
     }
 
     private void validateChoices(final List<OptionChoice> optionChoices) {
-        Objects.requireNonNull(optionChoices, "optionValues는 null일 수 없습니다.");
+        if (Objects.isNull(optionChoices)) {
+            throw new ProductBadRequestException(OptionErrorCode.SELECT_CHOICES_NULL_BAD_REQUEST);
+        }
         if (optionChoices.isEmpty()) {
-            throw new IllegalArgumentException("선택지가 적어도 하나는 있어야합니다.");
+            throw new ProductBadRequestException(OptionErrorCode.SELECT_CHOICES_EMPTY_BAD_REQUEST);
         }
     }
 

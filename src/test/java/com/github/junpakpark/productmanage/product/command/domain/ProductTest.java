@@ -6,6 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.github.junpakpark.productmanage.product.command.domain.option.InputOption;
 import com.github.junpakpark.productmanage.product.command.domain.option.ProductOption;
+import com.github.junpakpark.productmanage.product.exception.OptionErrorCode;
+import com.github.junpakpark.productmanage.product.exception.ProductBadRequestException;
+import com.github.junpakpark.productmanage.product.exception.ProductConflictException;
+import com.github.junpakpark.productmanage.product.exception.ProductErrorCode;
+import com.github.junpakpark.productmanage.product.exception.ProductFobiddenException;
 import java.math.BigDecimal;
 import java.util.NoSuchElementException;
 import org.assertj.core.api.SoftAssertions;
@@ -59,8 +64,8 @@ class ProductTest {
             // Action
             // Assert
             assertThatThrownBy(() -> new Product(null, description, price, shippingFee, memberId))
-                    .isInstanceOf(NullPointerException.class)
-                    .hasMessage("상품명은 필수입니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(ProductErrorCode.NAME_BAD_REQUEST.getMessage());
         }
 
         @Test
@@ -69,8 +74,8 @@ class ProductTest {
             // Action
             // Assert
             assertThatThrownBy(() -> new Product(name, description, null, shippingFee, memberId))
-                    .isInstanceOf(NullPointerException.class)
-                    .hasMessage("상품 가격은 필수입니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(ProductErrorCode.PRICE_BAD_REQUEST.getMessage());
         }
 
         @Test
@@ -79,8 +84,8 @@ class ProductTest {
             // Action
             // Assert
             assertThatThrownBy(() -> new Product(name, description, price, null, memberId))
-                    .isInstanceOf(NullPointerException.class)
-                    .hasMessage("배송비는 필수입니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(ProductErrorCode.SHIPPING_FEE_BAD_REQUEST.getMessage());
         }
 
         @Test
@@ -92,8 +97,8 @@ class ProductTest {
             // Action
             // Assert
             assertThatThrownBy(() -> new Product(name, longDescription, price, shippingFee, memberId))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("상품 설명은 최대 500자까지 가능합니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(ProductErrorCode.DESCRIPTION_BAD_REQUEST.getMessage());
         }
 
         @Test
@@ -102,8 +107,8 @@ class ProductTest {
             // Action
             // Assert
             assertThatThrownBy(() -> new Product(name, description, price, shippingFee, null))
-                    .isInstanceOf(NullPointerException.class)
-                    .hasMessage("판매자 id는 필수입니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(ProductErrorCode.MEMBER_BAD_REQUEST.getMessage());
         }
 
         @ParameterizedTest
@@ -113,8 +118,8 @@ class ProductTest {
             // Action
             // Assert
             assertThatThrownBy(() -> new Product(name, description, price, shippingFee, memberId))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("id는 1보다 커야합니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(ProductErrorCode.MEMBER_BAD_REQUEST.getMessage());
         }
     }
 
@@ -138,8 +143,8 @@ class ProductTest {
             // Action
             // Assert
             assertThatThrownBy(() -> sut.validateOwner(otherMemberId))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("상품 판매자 정보가 일치하지 않습니다. (productId= null)");
+                    .isInstanceOf(ProductFobiddenException.class)
+                    .hasMessage(ProductErrorCode.PRODUCT_FORBIDDEN.getMessage() + " 회원 ID: 2");
         }
     }
 
@@ -174,8 +179,8 @@ class ProductTest {
             // Action
             // Assert
             assertThatThrownBy(() -> sut.update(null))
-                    .isInstanceOf(NullPointerException.class)
-                    .hasMessage("수정 정보는 null일 수 없습니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(ProductErrorCode.UPDATE_BAD_REQUEST.getMessage());
         }
     }
 
@@ -208,8 +213,8 @@ class ProductTest {
 
             // Act & Assert
             assertThatThrownBy(() -> sut.addOption(option))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("다른 상품의 옵션입니다.");
+                    .isInstanceOf(ProductConflictException.class)
+                    .hasMessage(OptionErrorCode.ASSOCIATION_CONFLICT.getMessage());
         }
 
     }

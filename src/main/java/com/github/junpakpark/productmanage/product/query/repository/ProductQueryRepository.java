@@ -4,13 +4,14 @@ import static com.github.junpakpark.productmanage.product.command.domain.QProduc
 import static com.github.junpakpark.productmanage.product.command.domain.option.QProductOption.productOption;
 
 import com.github.junpakpark.productmanage.product.command.domain.Product;
+import com.github.junpakpark.productmanage.product.exception.ProductErrorCode;
+import com.github.junpakpark.productmanage.product.exception.ProductNotFoundException;
 import com.github.junpakpark.productmanage.product.query.dto.ProductDetailResponse;
 import com.github.junpakpark.productmanage.product.query.dto.ProductOptionResponse;
 import com.github.junpakpark.productmanage.product.query.dto.ProductSummaryResponse;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -55,9 +56,7 @@ public class ProductQueryRepository {
                 .where(product.id.eq(productId))
                 .fetchOne();
 
-        if (Objects.isNull(fetchedProduct)) {
-            throw new NoSuchElementException("Product with id " + productId + " not found");
-        }
+        validateProductExists(productId, fetchedProduct);
         return ProductDetailResponse.from(fetchedProduct);
     }
 
@@ -68,13 +67,15 @@ public class ProductQueryRepository {
                 .where(product.id.eq(productId))
                 .fetchOne();
 
-        if (Objects.isNull(fetchedProduct)) {
-            throw new NoSuchElementException("Product with id " + productId + " not found");
-        }
-
+        validateProductExists(productId, fetchedProduct);
         return fetchedProduct.getProductOptions().stream()
                 .map(option -> ProductOptionResponse.of(option, option.optionChoices()))
                 .toList();
     }
 
+    private void validateProductExists(final Long productId, final Product fetchedProduct) {
+        if (Objects.isNull(fetchedProduct)) {
+            throw new ProductNotFoundException(ProductErrorCode.PRODUCT_NOT_FOUND, productId);
+        }
+    }
 }

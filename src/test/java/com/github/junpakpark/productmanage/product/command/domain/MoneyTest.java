@@ -3,6 +3,8 @@ package com.github.junpakpark.productmanage.product.command.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.github.junpakpark.productmanage.product.exception.ProductBadRequestException;
+import com.github.junpakpark.productmanage.product.exception.ProductErrorCode;
 import java.math.BigDecimal;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
@@ -36,8 +38,8 @@ class MoneyTest {
             // Action
             // Assert
             assertThatThrownBy(() -> new Money(amount))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("금액은 필수입니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(ProductErrorCode.PRICE_BAD_REQUEST.getMessage());
         }
 
         @Test
@@ -49,8 +51,8 @@ class MoneyTest {
             // Action
             // Assert
             assertThatThrownBy(() -> new Money(amount))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("금액은 음수일 수 없습니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(ProductErrorCode.PRICE_NEGATIVE_BAD_REQUEST.getMessage());
         }
     }
 
@@ -95,8 +97,8 @@ class MoneyTest {
             // Action
             // Assert
             assertThatThrownBy(() -> money1.subtract(money2))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("금액은 음수일 수 없습니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(ProductErrorCode.PRICE_NEGATIVE_BAD_REQUEST.getMessage());
         }
     }
 

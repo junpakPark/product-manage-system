@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.github.junpakpark.productmanage.product.command.domain.Money;
 import com.github.junpakpark.productmanage.product.command.domain.Name;
+import com.github.junpakpark.productmanage.product.exception.OptionErrorCode;
+import com.github.junpakpark.productmanage.product.exception.ProductBadRequestException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -54,8 +56,8 @@ class ProductOptionsTest {
 
             // Act & Assert
             assertThatThrownBy(() -> sut.add(extraOption))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("옵션은 3개를 초과할 수 없습니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(OptionErrorCode.SIZE_BAD_REQUEST.getMessage().formatted(3));
         }
 
         @Test
@@ -70,8 +72,8 @@ class ProductOptionsTest {
             // Action
             // Assert
             assertThatThrownBy(() -> sut.add(option2))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("동일한 이름의 옵션이 이미 존재합니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(OptionErrorCode.NAME_DUPLICATE_BAD_REQUEST.getMessage());
         }
 
     }
@@ -153,8 +155,8 @@ class ProductOptionsTest {
 
             // Act & Assert
             assertThatThrownBy(() -> sut.update(2L, updatedOption))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("동일한 이름의 옵션이 이미 존재합니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(OptionErrorCode.NAME_DUPLICATE_BAD_REQUEST.getMessage());
         }
 
     }

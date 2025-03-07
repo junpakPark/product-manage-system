@@ -6,6 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.github.junpakpark.productmanage.product.command.application.port.in.web.OptionCommand;
 import com.github.junpakpark.productmanage.product.command.domain.Money;
 import com.github.junpakpark.productmanage.product.command.domain.Name;
+import com.github.junpakpark.productmanage.product.exception.OptionErrorCode;
+import com.github.junpakpark.productmanage.product.exception.ProductBadRequestException;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
@@ -86,8 +88,8 @@ class OptionFactoryTest {
         // Action
         // Assert
         assertThatThrownBy(() -> sut.createOption(command))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("선택지가 적어도 하나는 있어야합니다.");
+                .isInstanceOf(ProductBadRequestException.class)
+                .hasMessage(OptionErrorCode.SELECT_CHOICES_EMPTY_BAD_REQUEST.getMessage());
     }
 
 }
