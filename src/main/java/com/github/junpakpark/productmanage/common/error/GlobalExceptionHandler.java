@@ -2,6 +2,7 @@ package com.github.junpakpark.productmanage.common.error;
 
 import com.github.junpakpark.productmanage.common.error.exception.ForbiddenException.RoleForbiddenException;
 import com.github.junpakpark.productmanage.common.error.exception.GlobalException;
+import com.github.junpakpark.productmanage.common.security.exception.TokenUnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -44,6 +45,21 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(errorResponse);
     }
 
+    @ExceptionHandler(TokenUnauthorizedException.class)
+    protected ResponseEntity<ErrorResponse> handleTokenUnauthorizedException(
+            final TokenUnauthorizedException e,
+            final HttpServletRequest request
+    ) {
+        final ErrorCode<?> errorCode = e.getErrorCode();
+        log.warn(
+                "[SECURITY EVENT]: ({}) {} \n 요청 IP: {}, 요청 URL: {}, 요청 Method: {}",
+                errorCode.getCode(), errorCode.getMessage(),
+                request.getRemoteAddr(), request.getRequestURI(), request.getMethod()
+        );
+
+        return ResponseEntity.status(e.getStatus()).body(ErrorResponse.from(errorCode));
+    }
+
     @ExceptionHandler(RoleForbiddenException.class)
     protected ResponseEntity<ErrorResponse> handleRoleForbiddenException(
             final RoleForbiddenException e,
@@ -51,9 +67,9 @@ public class GlobalExceptionHandler {
     ) {
         final ErrorCode<?> errorCode = e.getErrorCode();
         log.warn(
-                "[SECURITY EVENT]: 권한이 없는 사용자 접근 \n 요청 IP: {}, 요청 URL: {}, 요청 Method: {} \n code = {} message = {}",
-                request.getRemoteAddr(), request.getRequestURI(), request.getMethod(),
-                errorCode.getCode(), errorCode.getMessage()
+                "[SECURITY EVENT]: ({}) {} \n 요청 IP: {}, 요청 URL: {}, 요청 Method: {}",
+                errorCode.getCode(), errorCode.getMessage(),
+                request.getRemoteAddr(), request.getRequestURI(), request.getMethod()
         );
 
         return ResponseEntity.status(e.getStatus()).body(ErrorResponse.from(errorCode));

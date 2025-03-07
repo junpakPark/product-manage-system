@@ -96,7 +96,7 @@ class AdminAuthorizationInterceptorTest {
             }
 
             @Override
-            public boolean isAccessToken(final String token) {
+            public void validateAccessToken(final String token) {
                 throw new UnsupportedOperationException();
             }
         };
