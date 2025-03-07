@@ -1,6 +1,6 @@
 package com.github.junpakpark.productmanage.common.error;
 
-import com.github.junpakpark.productmanage.common.error.exception.ForbiddenException.RoleForbiddenException;
+import com.github.junpakpark.productmanage.common.error.exception.ForbiddenException;
 import com.github.junpakpark.productmanage.common.error.exception.GlobalException;
 import com.github.junpakpark.productmanage.common.error.exception.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -60,9 +60,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(e.getStatus()).body(ErrorResponse.from(errorCode));
     }
 
-    @ExceptionHandler(RoleForbiddenException.class)
+    @ExceptionHandler(ForbiddenException.class)
     protected ResponseEntity<ErrorResponse> handleRoleForbiddenException(
-            final RoleForbiddenException e,
+            final ForbiddenException e,
             final HttpServletRequest request
     ) {
         final ErrorCode<?> errorCode = e.getErrorCode();

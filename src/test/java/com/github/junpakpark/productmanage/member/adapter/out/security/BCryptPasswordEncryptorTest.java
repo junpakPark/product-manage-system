@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import com.github.junpakpark.productmanage.member.domain.Password;
+import com.github.junpakpark.productmanage.member.exception.MemberErrorCode;
+import com.github.junpakpark.productmanage.member.exception.PasswordUnauthorizedException;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -73,7 +75,7 @@ class BCryptPasswordEncryptorTest {
 
         // when & then
         assertThatThrownBy(() -> sut.validatePassword(rawPassword, encodedPassword))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Invalid password");
+                .isInstanceOf(PasswordUnauthorizedException.class)
+                .hasMessage(MemberErrorCode.PASSWORD_UNMATCHED.getMessage());
     }
 }
