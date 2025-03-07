@@ -1,17 +1,31 @@
 package com.github.junpakpark.productmanage.common.domain;
 
+import com.github.junpakpark.productmanage.common.error.exception.ForbiddenException.RoleForbiddenException;
+import lombok.Getter;
+
+@Getter
 public enum Role {
 
-    ADMIN, SELLER, BUYER,
+    ADMIN("관리자"),
+    SELLER("판매자"),
+    BUYER("구매자"),
     ;
 
-    public boolean isAdmin() {
-        return this == Role.ADMIN;
+    private final String description;
+
+    Role(final String description) {
+        this.description = description;
+    }
+
+    public void validateAdmin() {
+        if (this != Role.ADMIN) {
+            throw new RoleForbiddenException(Role.ADMIN);
+        }
     }
 
     public void validateSeller() {
         if (this == Role.BUYER) {
-            throw new IllegalArgumentException("상품 관리 권한이 없습니다.");
+            throw new RoleForbiddenException(Role.SELLER);
         }
     }
 

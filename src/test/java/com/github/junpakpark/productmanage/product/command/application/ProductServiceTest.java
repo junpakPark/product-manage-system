@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.github.junpakpark.productmanage.common.domain.Role;
+import com.github.junpakpark.productmanage.common.error.exception.ForbiddenException.RoleForbiddenException;
 import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
 import com.github.junpakpark.productmanage.product.command.OptionSteps;
 import com.github.junpakpark.productmanage.product.command.ProductSteps;
@@ -65,8 +66,8 @@ class ProductServiceTest {
             // Action
             // Assert
             assertThatThrownBy(() -> sut.create(buyer, productCommand))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("상품 관리 권한이 없습니다.");
+                    .isInstanceOf(RoleForbiddenException.class)
+                    .hasMessage("판매자 이상의 권한이 필요합니다.");
         }
 
         @Test
@@ -137,8 +138,8 @@ class ProductServiceTest {
             // Action
             // Assert
             assertThatThrownBy(() -> sut.update(buyer, productId, updateCommand))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("상품 관리 권한이 없습니다.");
+                    .isInstanceOf(RoleForbiddenException.class)
+                    .hasMessage("판매자 이상의 권한이 필요합니다.");
         }
 
         @Test
@@ -208,8 +209,8 @@ class ProductServiceTest {
             // Action
             // Assert
             assertThatThrownBy(() -> sut.delete(buyer, productId))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("상품 관리 권한이 없습니다.");
+                    .isInstanceOf(RoleForbiddenException.class)
+                    .hasMessage("판매자 이상의 권한이 필요합니다.");
         }
 
         @Test
@@ -286,8 +287,8 @@ class ProductServiceTest {
                 // Action
                 // Assert
                 assertThatThrownBy(() -> sut.addOption(buyer, productId, inputCommand))
-                        .isInstanceOf(IllegalArgumentException.class)
-                        .hasMessage("상품 관리 권한이 없습니다.");
+                        .isInstanceOf(RoleForbiddenException.class)
+                        .hasMessage("판매자 이상의 권한이 필요합니다.");
             }
 
             @Test
@@ -412,8 +413,8 @@ class ProductServiceTest {
                 // Action
                 // Assert
                 assertThatThrownBy(() -> sut.updateOption(buyer, productId, optionId, selectCommand))
-                        .isInstanceOf(IllegalArgumentException.class)
-                        .hasMessage("상품 관리 권한이 없습니다.");
+                        .isInstanceOf(RoleForbiddenException.class)
+                        .hasMessage("판매자 이상의 권한이 필요합니다.");
             }
 
             @Test
@@ -505,8 +506,8 @@ class ProductServiceTest {
                 // Action
                 // Assert
                 assertThatThrownBy(() -> sut.deleteOption(buyer, productId, optionId))
-                        .isInstanceOf(IllegalArgumentException.class)
-                        .hasMessage("상품 관리 권한이 없습니다.");
+                        .isInstanceOf(RoleForbiddenException.class)
+                        .hasMessage("판매자 이상의 권한이 필요합니다.");
             }
 
             @Test
