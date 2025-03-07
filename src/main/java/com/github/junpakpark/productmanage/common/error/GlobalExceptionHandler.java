@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BindException.class)
     protected ResponseEntity<ErrorResponse> handleBindException(final BindException e) {
-        log.error("handleBindException", e);
+        log.warn("handleBindException", e);
         final ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.BAD_REQUEST.toString(), e.getBindingResult());
 
         return ResponseEntity.badRequest().body(errorResponse);
@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(
             final MethodArgumentTypeMismatchException e
     ) {
-        log.error("handleMethodArgumentTypeMismatchException", e);
+        log.warn("handleMethodArgumentTypeMismatchException", e);
         final ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), e.getMessage());
 
         return ResponseEntity.badRequest().body(errorResponse);
@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(
             final HttpRequestMethodNotSupportedException e
     ) {
-        log.error("handleHttpRequestMethodNotSupportedException", e);
+        log.warn("handleHttpRequestMethodNotSupportedException", e);
         final ErrorResponse errorResponse = new ErrorResponse(HttpStatus.METHOD_NOT_ALLOWED.toString(), e.getMessage());
 
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(errorResponse);
@@ -76,22 +76,46 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(GlobalException.class)
-    protected ResponseEntity<ErrorResponse> handleGlobalException(final GlobalException e) {
-        log.error("handleGlobalException", e);
-        final ErrorResponse errorResponse = ErrorResponse.from(e.getErrorCode());
+    protected ResponseEntity<ErrorResponse> handleGlobalException(
+            final GlobalException e,
+            final HttpServletRequest request
+    ) {
+        final String exceptionSource = extractExceptionSource(e);
+        final ErrorCode<?> errorCode = e.getErrorCode();
 
-        return ResponseEntity.status(e.getStatus()).body(errorResponse);
+        log.warn(
+                "source = {} \n 요청 IP: {}, 요청 URL: {}, 요청 Method: {} \n ({}) {}",
+                exceptionSource,
+                request.getMethod(), request.getRequestURI(), request.getMethod(),
+                errorCode.getCode(), errorCode.getMessage()
+        );
+
+        return ResponseEntity.status(e.getStatus()).body(ErrorResponse.from(errorCode));
     }
 
     @ExceptionHandler(Exception.class)
-    protected ResponseEntity<ErrorResponse> handleException(final Exception e) {
-        log.error("handleException", e);
-        final ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.toString(),
-                e.getMessage()
+    protected ResponseEntity<ErrorResponse> handleException(
+            final Exception exception,
+            final HttpServletRequest request
+    ) {
+        final String exceptionSource = extractExceptionSource(exception);
+
+        log.error(
+                "source = {} \n 요청 IP: {}, 요청 URL: {}, 요청 Method: {}",
+                exceptionSource,
+                request.getRemoteAddr(), request.getRequestURI(), request.getMethod(),
+                exception
         );
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    private String extractExceptionSource(Exception exception) {
+        final StackTraceElement[] stackTrace = exception.getStackTrace();
+        if (stackTrace.length > 0) {
+            return stackTrace[0].toString();
+        }
+        return "Unknown Source";
     }
 
 }
