@@ -3,6 +3,8 @@ package com.github.junpakpark.productmanage.product.command.domain.option;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.github.junpakpark.productmanage.product.exception.OptionErrorCode;
+import com.github.junpakpark.productmanage.product.exception.ProductBadRequestException;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,8 +40,8 @@ class OptionChoiceTest {
             // Action
             // Assert
             assertThatThrownBy(() -> new OptionChoice(value))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("선택지는 비어있을 수 없습니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(OptionErrorCode.CHOICE_BLANK_BAD_REQUEST.getMessage());
         }
 
         @Test
@@ -51,8 +53,8 @@ class OptionChoiceTest {
             // Action
             // Assert
             assertThatThrownBy(() -> new OptionChoice(value))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("선택지는 최대 30자 이하여야 합니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(OptionErrorCode.CHOICE_LENGTH_BAD_REQUEST.getMessage().formatted(30));
         }
     }
 

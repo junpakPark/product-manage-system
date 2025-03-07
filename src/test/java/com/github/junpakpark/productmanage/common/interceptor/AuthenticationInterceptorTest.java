@@ -7,9 +7,12 @@ import static org.mockito.Mockito.when;
 
 import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
 import com.github.junpakpark.productmanage.common.security.application.port.out.token.TokenValidator;
+import com.github.junpakpark.productmanage.common.security.exception.HeaderErrorCode;
+import com.github.junpakpark.productmanage.common.security.exception.HeaderUnauthorizedException;
+import com.github.junpakpark.productmanage.common.security.exception.TokenErrorCode;
+import com.github.junpakpark.productmanage.common.security.exception.TokenUnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import javax.naming.AuthenticationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +35,7 @@ class AuthenticationInterceptorTest {
 
     @Test
     @DisplayName("정상적인 AccessToken 요청은 통과된다")
-    void validAccessToken_passes() throws Exception {
+    void validAccessToken_passes() {
         // Arrange
         when(request.getHeader("Authorization")).thenReturn("Bearer valid-access-token");
 
@@ -51,7 +54,8 @@ class AuthenticationInterceptorTest {
 
         // Action & Assert
         assertThatThrownBy(() -> sut.preHandle(request, response, handler))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(HeaderUnauthorizedException.class)
+                .hasMessage(HeaderErrorCode.AUTHORIZATION_HEADER_MISSING.getMessage());
     }
 
     @Test
@@ -66,14 +70,15 @@ class AuthenticationInterceptorTest {
     }
 
     @Test
-    @DisplayName("AccessToken이 아니면 AuthenticationException 발생")
+    @DisplayName("AccessToken이 아니면 TokenUnauthorizedException 발생")
     void notAccessToken_throwsAuthenticationException() {
         // Arrange
         when(request.getHeader("Authorization")).thenReturn("Bearer not-access-token");
 
         // Action & Assert
         assertThatThrownBy(() -> sut.preHandle(request, response, handler))
-                .isInstanceOf(AuthenticationException.class);
+                .isInstanceOf(TokenUnauthorizedException.class)
+                .hasMessage("Access Token이 아닙니다.");
     }
 
     private TokenValidator getFakeTokenValidator() {
@@ -86,14 +91,16 @@ class AuthenticationInterceptorTest {
 
             @Override
             public void validateToken(final String token) {
-                if("invalid-token".equals(token)) {
+                if ("invalid-token".equals(token)) {
                     throw new IllegalArgumentException();
                 }
             }
 
             @Override
-            public boolean isAccessToken(final String token) {
-                return !token.equals("not-access-token");
+            public void validateAccessToken(final String token) {
+                if ("not-access-token".equals(token)) {
+                    throw new TokenUnauthorizedException(TokenErrorCode.NOT_ACCESS_TOKEN);
+                }
             }
         };
     }

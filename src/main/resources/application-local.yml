@@ -1,0 +1,35 @@
+spring:
+  config:
+    import: classpath:application-common.yml
+
+  datasource:
+    url: jdbc:h2:mem:test;MODE=MYSQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+        use_sql_comments: true
+
+logging:
+  level:
+    org.hibernate.type: trace
+
+jwt:
+  token:
+    secret: "mF9WkhY9L77NsWjN7a4aPPVVmYSHJZbXkHfH6Qh7yTg="
+    access-expiration-ms: 3600000  # 1시간
+    refresh-expiration-ms: 604800000  # 7일

@@ -3,6 +3,9 @@ package com.github.junpakpark.productmanage.product.command.domain;
 import com.github.junpakpark.productmanage.common.domain.BaseEntity;
 import com.github.junpakpark.productmanage.product.command.domain.option.ProductOption;
 import com.github.junpakpark.productmanage.product.command.domain.option.ProductOptions;
+import com.github.junpakpark.productmanage.product.exception.ProductBadRequestException;
+import com.github.junpakpark.productmanage.product.exception.ProductErrorCode;
+import com.github.junpakpark.productmanage.product.exception.ProductFobiddenException;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -47,8 +50,7 @@ public class Product extends BaseEntity {
             final Money shippingFee,
             final Long memberId
     ) {
-        validateNotNull(name, price, shippingFee);
-        validateDescription(description);
+        validate(name, description, price, shippingFee);
         validateMember(memberId);
         this.name = name;
         this.description = description;
@@ -60,7 +62,7 @@ public class Product extends BaseEntity {
 
     public void validateOwner(final Long ownerId) {
         if (!Objects.equals(this.memberId, ownerId)) {
-            throw new IllegalArgumentException("상품 판매자 정보가 일치하지 않습니다. (productId= %d)".formatted(this.id));
+            throw new ProductFobiddenException(ProductErrorCode.PRODUCT_FORBIDDEN, ownerId);
         }
     }
 
@@ -71,7 +73,6 @@ public class Product extends BaseEntity {
         this.price = updatedProduct.price;
         this.shippingFee = updatedProduct.shippingFee;
     }
-
 
     public void addOption(final ProductOption productOption) {
         productOption.associatedWith(this);
@@ -90,29 +91,32 @@ public class Product extends BaseEntity {
         return productOptions.getOptions();
     }
 
-    private void validateNotNull(final Name name, final Money price, final Money shippingFee) {
-        Objects.requireNonNull(name, "상품명은 필수입니다.");
-        Objects.requireNonNull(price, "상품 가격은 필수입니다.");
-        Objects.requireNonNull(shippingFee, "배송비는 필수입니다.");
-    }
-
-    private void validateDescription(final String description) {
+    private void validate(final Name name, final String description, final Money price, final Money shippingFee) {
+        if (Objects.isNull(name)) {
+            throw new ProductBadRequestException(ProductErrorCode.NAME_BAD_REQUEST);
+        }
         if (description.length() > 500) {
-            throw new IllegalArgumentException("상품 설명은 최대 500자까지 가능합니다.");
+            throw new ProductBadRequestException(ProductErrorCode.DESCRIPTION_BAD_REQUEST);
+        }
+        if (Objects.isNull(price)) {
+            throw new ProductBadRequestException(ProductErrorCode.PRICE_BAD_REQUEST);
+        }
+        if (Objects.isNull(shippingFee)) {
+            throw new ProductBadRequestException(ProductErrorCode.SHIPPING_FEE_BAD_REQUEST);
         }
     }
 
     private void validateUpdate(final Product updatedProduct) {
-        Objects.requireNonNull(updatedProduct, "수정 정보는 null일 수 없습니다.");
-        validateNotNull(updatedProduct.name, updatedProduct.price, updatedProduct.shippingFee);
-        validateDescription(updatedProduct.description);
+        if (Objects.isNull(updatedProduct)) {
+            throw new ProductBadRequestException(ProductErrorCode.UPDATE_BAD_REQUEST);
+        }
+        validate(updatedProduct.getName(), updatedProduct.getDescription(), updatedProduct.getPrice(),
+                updatedProduct.getShippingFee());
     }
 
     private void validateMember(final Long memberId) {
-        Objects.requireNonNull(memberId, "판매자 id는 필수입니다.");
-        if (memberId <= 0) {
-            throw new IllegalArgumentException("id는 1보다 커야합니다.");
+        if (Objects.isNull(memberId) || memberId < 1) {
+            throw new ProductBadRequestException(ProductErrorCode.MEMBER_BAD_REQUEST);
         }
     }
-
 }

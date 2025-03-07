@@ -1,5 +1,7 @@
 package com.github.junpakpark.productmanage.product.command.domain;
 
+import com.github.junpakpark.productmanage.product.exception.ProductBadRequestException;
+import com.github.junpakpark.productmanage.product.exception.ProductErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.util.Objects;
@@ -26,13 +28,13 @@ public class Name {
 
     private void validateBlank(final String value) {
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException("이름은 비어있을 수 없습니다.");
+            throw new ProductBadRequestException(ProductErrorCode.NAME_BAD_REQUEST);
         }
     }
 
     private void validateLength(final String value) {
         if (value.length() > MAX_LENGTH) {
-            throw new IllegalArgumentException("이름은 최대 %d자 이하여야 합니다.".formatted(MAX_LENGTH));
+            throw new ProductBadRequestException(ProductErrorCode.NAME_LENGTH_BAD_REQUEST, MAX_LENGTH);
         }
     }
 

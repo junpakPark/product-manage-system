@@ -6,11 +6,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.github.junpakpark.productmanage.common.domain.Role;
+import com.github.junpakpark.productmanage.common.error.exception.ForbiddenException.RoleForbiddenException;
 import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
 import com.github.junpakpark.productmanage.common.security.application.port.out.token.TokenValidator;
+import com.github.junpakpark.productmanage.common.security.exception.HeaderErrorCode;
+import com.github.junpakpark.productmanage.common.security.exception.HeaderUnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.nio.file.AccessDeniedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,7 +36,7 @@ class AdminAuthorizationInterceptorTest {
 
     @Test
     @DisplayName("관리자 권한 토큰일 경우 요청이 통과된다")
-    void adminToken_passes() throws Exception {
+    void adminToken_passes() {
         // Arrange
         when(request.getHeader("Authorization")).thenReturn("Bearer admin-token");
 
@@ -53,7 +55,8 @@ class AdminAuthorizationInterceptorTest {
 
         // Act & Assert
         assertThatThrownBy(() -> sut.preHandle(request, response, handler))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(HeaderUnauthorizedException.class)
+                .hasMessage(HeaderErrorCode.AUTHORIZATION_HEADER_MISSING.getMessage());
     }
 
     @Test
@@ -64,8 +67,8 @@ class AdminAuthorizationInterceptorTest {
 
         // Act & Assert
         assertThatThrownBy(() -> sut.preHandle(request, response, handler))
-                .isInstanceOf(AccessDeniedException.class)
-                .hasMessage("관리자 권한이 필요합니다.");
+                .isInstanceOf(RoleForbiddenException.class)
+                .hasMessage("관리자 이상의 권한이 필요합니다.");
     }
 
     @Test
@@ -76,8 +79,8 @@ class AdminAuthorizationInterceptorTest {
 
         // Act & Assert
         assertThatThrownBy(() -> sut.preHandle(request, response, handler))
-                .isInstanceOf(AccessDeniedException.class)
-                .hasMessage("관리자 권한이 필요합니다.");
+                .isInstanceOf(RoleForbiddenException.class)
+                .hasMessage("관리자 이상의 권한이 필요합니다.");
     }
 
     private TokenValidator getFakeTokenValidator() {
@@ -96,7 +99,7 @@ class AdminAuthorizationInterceptorTest {
             }
 
             @Override
-            public boolean isAccessToken(final String token) {
+            public void validateAccessToken(final String token) {
                 throw new UnsupportedOperationException();
             }
         };

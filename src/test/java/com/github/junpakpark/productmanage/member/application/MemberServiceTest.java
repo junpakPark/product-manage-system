@@ -12,6 +12,9 @@ import com.github.junpakpark.productmanage.member.application.port.in.web.LoginC
 import com.github.junpakpark.productmanage.member.application.port.in.web.RegisterMemberCommand;
 import com.github.junpakpark.productmanage.member.domain.Member;
 import com.github.junpakpark.productmanage.member.domain.MemberRepository;
+import com.github.junpakpark.productmanage.member.exception.EmailConflictException;
+import com.github.junpakpark.productmanage.member.exception.MemberErrorCode;
+import com.github.junpakpark.productmanage.member.exception.MemberNotFoundException;
 import java.util.NoSuchElementException;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,8 +69,8 @@ class MemberServiceTest {
 
             // Action & Assert
             assertThatThrownBy(() -> sut.register(duplicateCommand))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("Email already exists");
+                    .isInstanceOf(EmailConflictException.class)
+                    .hasMessage(MemberErrorCode.EMAIL_CONFLICT.getMessage());
         }
 
     }
@@ -140,7 +143,8 @@ class MemberServiceTest {
 
             // Action & Assert
             assertThatThrownBy(() -> sut.validateMember(command))
-                    .isInstanceOf(NoSuchElementException.class);
+                    .isInstanceOf(MemberNotFoundException.class)
+                    .hasMessage(MemberErrorCode.MEMBER_NOT_FOUND.getMessage());
         }
 
         @Test

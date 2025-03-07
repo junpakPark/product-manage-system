@@ -1,5 +1,7 @@
 package com.github.junpakpark.productmanage.product.command.domain.option;
 
+import com.github.junpakpark.productmanage.product.exception.ProductBadRequestException;
+import com.github.junpakpark.productmanage.product.exception.OptionErrorCode;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
@@ -43,17 +45,17 @@ public class ProductOptions {
                 .toList();
     }
 
-    private void validateSize() {
-        if (options.size() >= MAX_OPTIONS) {
-            throw new IllegalArgumentException("옵션은 %d개를 초과할 수 없습니다.".formatted(MAX_OPTIONS));
-        }
-    }
-
     private ProductOption findById(final Long optionId) {
         return options.stream()
                 .filter(option -> option.hasSameId(optionId))
                 .findFirst()
                 .orElseThrow(NoSuchElementException::new);
+    }
+
+    private void validateSize() {
+        if (options.size() >= MAX_OPTIONS) {
+            throw new ProductBadRequestException(OptionErrorCode.SIZE_BAD_REQUEST, MAX_OPTIONS);
+        }
     }
 
     private void validateDuplicateOptionName() {
@@ -63,7 +65,7 @@ public class ProductOptions {
                 .count();
 
         if (distinctCount != options.size()) {
-            throw new IllegalArgumentException("동일한 이름의 옵션이 이미 존재합니다.");
+            throw new ProductBadRequestException(OptionErrorCode.NAME_DUPLICATE_BAD_REQUEST);
         }
     }
 

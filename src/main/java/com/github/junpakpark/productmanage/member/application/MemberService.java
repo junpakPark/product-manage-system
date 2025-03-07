@@ -10,6 +10,8 @@ import com.github.junpakpark.productmanage.member.application.port.out.security.
 import com.github.junpakpark.productmanage.member.domain.Member;
 import com.github.junpakpark.productmanage.member.domain.MemberRepository;
 import com.github.junpakpark.productmanage.member.domain.Password;
+import com.github.junpakpark.productmanage.member.exception.EmailConflictException;
+import com.github.junpakpark.productmanage.member.exception.MemberErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +27,7 @@ public class MemberService implements MemberUseCase, ValidateMemberUseCase {
     @Override
     public Long register(final RegisterMemberCommand command) {
         if (memberRepository.existsByEmail(command.email())) {
-            throw new IllegalArgumentException("Email already exists");
+            throw new EmailConflictException(MemberErrorCode.EMAIL_CONFLICT);
         }
         final Password password = passwordEncryptor.encode(command.password());
         final Member member = memberRepository.save(command.toMember(password));

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.github.junpakpark.productmanage.common.domain.Role;
+import com.github.junpakpark.productmanage.common.error.exception.ForbiddenException.RoleForbiddenException;
 import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
 import com.github.junpakpark.productmanage.product.command.OptionSteps;
 import com.github.junpakpark.productmanage.product.command.ProductSteps;
@@ -18,6 +19,10 @@ import com.github.junpakpark.productmanage.product.command.domain.option.OptionF
 import com.github.junpakpark.productmanage.product.command.domain.option.OptionType;
 import com.github.junpakpark.productmanage.product.command.domain.option.ProductOption;
 import com.github.junpakpark.productmanage.product.command.domain.option.SelectOption;
+import com.github.junpakpark.productmanage.product.exception.OptionErrorCode;
+import com.github.junpakpark.productmanage.product.exception.ProductBadRequestException;
+import com.github.junpakpark.productmanage.product.exception.ProductErrorCode;
+import com.github.junpakpark.productmanage.product.exception.ProductFobiddenException;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
@@ -65,8 +70,8 @@ class ProductServiceTest {
             // Action
             // Assert
             assertThatThrownBy(() -> sut.create(buyer, productCommand))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("상품 관리 권한이 없습니다.");
+                    .isInstanceOf(RoleForbiddenException.class)
+                    .hasMessage("판매자 이상의 권한이 필요합니다.");
         }
 
         @Test
@@ -77,8 +82,8 @@ class ProductServiceTest {
             );
 
             assertThatThrownBy(() -> sut.create(memberInfo, invalidCommand))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("이름은 비어있을 수 없습니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(ProductErrorCode.NAME_BAD_REQUEST.getMessage());
         }
 
         @Test
@@ -89,8 +94,8 @@ class ProductServiceTest {
             );
 
             assertThatThrownBy(() -> sut.create(memberInfo, invalidCommand))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("금액은 필수입니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(ProductErrorCode.PRICE_BAD_REQUEST.getMessage());
         }
 
         @Test
@@ -101,8 +106,8 @@ class ProductServiceTest {
             );
 
             assertThatThrownBy(() -> sut.create(memberInfo, invalidCommand))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("금액은 필수입니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(ProductErrorCode.PRICE_BAD_REQUEST.getMessage());
         }
 
     }
@@ -137,8 +142,8 @@ class ProductServiceTest {
             // Action
             // Assert
             assertThatThrownBy(() -> sut.update(buyer, productId, updateCommand))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("상품 관리 권한이 없습니다.");
+                    .isInstanceOf(RoleForbiddenException.class)
+                    .hasMessage("판매자 이상의 권한이 필요합니다.");
         }
 
         @Test
@@ -150,8 +155,8 @@ class ProductServiceTest {
             // Action
             // Assert
             assertThatThrownBy(() -> sut.update(otherSeller, productId, updateCommand))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining("상품 판매자 정보가 일치하지 않습니다.");
+                    .isInstanceOf(ProductFobiddenException.class)
+                    .hasMessageContaining(ProductErrorCode.PRODUCT_FORBIDDEN.getMessage() + " 회원 ID: 2");
         }
 
         @Test
@@ -178,8 +183,8 @@ class ProductServiceTest {
             // Action
             // Assert
             assertThatThrownBy(() -> sut.update(memberInfo, productId, invalidCommand))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("이름은 비어있을 수 없습니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(ProductErrorCode.NAME_BAD_REQUEST.getMessage());
         }
 
     }
@@ -208,8 +213,8 @@ class ProductServiceTest {
             // Action
             // Assert
             assertThatThrownBy(() -> sut.delete(buyer, productId))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("상품 관리 권한이 없습니다.");
+                    .isInstanceOf(RoleForbiddenException.class)
+                    .hasMessage("판매자 이상의 권한이 필요합니다.");
         }
 
         @Test
@@ -221,8 +226,8 @@ class ProductServiceTest {
             // Action
             // Assert
             assertThatThrownBy(() -> sut.delete(otherSeller, productId))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessageContaining("상품 판매자 정보가 일치하지 않습니다.");
+                    .isInstanceOf(ProductFobiddenException.class)
+                    .hasMessageContaining(ProductErrorCode.PRODUCT_FORBIDDEN.getMessage());
         }
 
         @Test
@@ -286,8 +291,8 @@ class ProductServiceTest {
                 // Action
                 // Assert
                 assertThatThrownBy(() -> sut.addOption(buyer, productId, inputCommand))
-                        .isInstanceOf(IllegalArgumentException.class)
-                        .hasMessage("상품 관리 권한이 없습니다.");
+                        .isInstanceOf(RoleForbiddenException.class)
+                        .hasMessage("판매자 이상의 권한이 필요합니다.");
             }
 
             @Test
@@ -299,8 +304,8 @@ class ProductServiceTest {
                 // Action
                 // Assert
                 assertThatThrownBy(() -> sut.addOption(otherSeller, productId, inputCommand))
-                        .isInstanceOf(IllegalArgumentException.class)
-                        .hasMessageContaining("상품 판매자 정보가 일치하지 않습니다.");
+                        .isInstanceOf(ProductFobiddenException.class)
+                        .hasMessageContaining(ProductErrorCode.PRODUCT_FORBIDDEN.getMessage() + " 회원 ID: 2");
             }
 
             @Test
@@ -333,8 +338,8 @@ class ProductServiceTest {
                 // Action
                 // Assert
                 assertThatThrownBy(() -> sut.addOption(memberInfo, productId, command))
-                        .isInstanceOf(IllegalArgumentException.class)
-                        .hasMessageContaining("옵션은 3개를 초과할 수 없습니다.");
+                        .isInstanceOf(ProductBadRequestException.class)
+                        .hasMessageContaining(OptionErrorCode.SIZE_BAD_REQUEST.getMessage().formatted(3));
             }
 
             @Test
@@ -346,8 +351,8 @@ class ProductServiceTest {
                 // Action
                 // Assert
                 assertThatThrownBy(() -> sut.addOption(memberInfo, productId, inputCommand))
-                        .isInstanceOf(IllegalArgumentException.class)
-                        .hasMessageContaining("동일한 이름의 옵션이 이미 존재합니다.");
+                        .isInstanceOf(ProductBadRequestException.class)
+                        .hasMessageContaining(OptionErrorCode.NAME_DUPLICATE_BAD_REQUEST.getMessage());
             }
 
             @Test
@@ -364,8 +369,8 @@ class ProductServiceTest {
                 // Action
                 // Assert
                 assertThatThrownBy(() -> sut.addOption(memberInfo, productId, command))
-                        .isInstanceOf(IllegalArgumentException.class)
-                        .hasMessageContaining("선택지가 적어도 하나는 있어야합니다.");
+                        .isInstanceOf(ProductBadRequestException.class)
+                        .hasMessageContaining(OptionErrorCode.SELECT_CHOICES_EMPTY_BAD_REQUEST.getMessage());
 
             }
 
@@ -399,8 +404,8 @@ class ProductServiceTest {
                 // Action
                 // Assert
                 assertThatThrownBy(() -> sut.updateOption(memberInfo, productId, optionId, inputCommand))
-                        .isInstanceOf(IllegalArgumentException.class)
-                        .hasMessage("옵션 타입은 변경할 수 없습니다.");
+                        .isInstanceOf(ProductBadRequestException.class)
+                        .hasMessage(OptionErrorCode.TYPE_BAD_REQUEST.getMessage());
             }
 
             @Test
@@ -412,8 +417,8 @@ class ProductServiceTest {
                 // Action
                 // Assert
                 assertThatThrownBy(() -> sut.updateOption(buyer, productId, optionId, selectCommand))
-                        .isInstanceOf(IllegalArgumentException.class)
-                        .hasMessage("상품 관리 권한이 없습니다.");
+                        .isInstanceOf(RoleForbiddenException.class)
+                        .hasMessage("판매자 이상의 권한이 필요합니다.");
             }
 
             @Test
@@ -425,8 +430,8 @@ class ProductServiceTest {
                 // Action
                 // Assert
                 assertThatThrownBy(() -> sut.updateOption(otherSeller, productId, optionId, selectCommand))
-                        .isInstanceOf(IllegalArgumentException.class)
-                        .hasMessageContaining("상품 판매자 정보가 일치하지 않습니다.");
+                        .isInstanceOf(ProductFobiddenException.class)
+                        .hasMessageContaining(ProductErrorCode.PRODUCT_FORBIDDEN.getMessage() + " 회원 ID: 2");
             }
 
             @Test
@@ -469,8 +474,8 @@ class ProductServiceTest {
                 // Action
                 // Assert
                 assertThatThrownBy(() -> sut.updateOption(memberInfo, productId, optionId, updateCommand))
-                        .isInstanceOf(IllegalArgumentException.class)
-                        .hasMessage("동일한 이름의 옵션이 이미 존재합니다.");
+                        .isInstanceOf(ProductBadRequestException.class)
+                        .hasMessage(OptionErrorCode.NAME_DUPLICATE_BAD_REQUEST.getMessage());
             }
 
         }
@@ -505,8 +510,8 @@ class ProductServiceTest {
                 // Action
                 // Assert
                 assertThatThrownBy(() -> sut.deleteOption(buyer, productId, optionId))
-                        .isInstanceOf(IllegalArgumentException.class)
-                        .hasMessage("상품 관리 권한이 없습니다.");
+                        .isInstanceOf(RoleForbiddenException.class)
+                        .hasMessage("판매자 이상의 권한이 필요합니다.");
             }
 
             @Test
@@ -518,8 +523,8 @@ class ProductServiceTest {
                 // Action
                 // Assert
                 assertThatThrownBy(() -> sut.deleteOption(otherSeller, productId, optionId))
-                        .isInstanceOf(IllegalArgumentException.class)
-                        .hasMessageContaining("상품 판매자 정보가 일치하지 않습니다.");
+                        .isInstanceOf(ProductFobiddenException.class)
+                        .hasMessage(ProductErrorCode.PRODUCT_FORBIDDEN.getMessage() + " 회원 ID: 2");
             }
 
             @Test

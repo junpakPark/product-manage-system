@@ -11,13 +11,14 @@ import com.github.junpakpark.productmanage.product.command.domain.option.InputOp
 import com.github.junpakpark.productmanage.product.command.domain.option.OptionChoice;
 import com.github.junpakpark.productmanage.product.command.domain.option.ProductOption;
 import com.github.junpakpark.productmanage.product.command.domain.option.SelectOption;
+import com.github.junpakpark.productmanage.product.exception.ProductErrorCode;
+import com.github.junpakpark.productmanage.product.exception.ProductNotFoundException;
 import com.github.junpakpark.productmanage.product.query.dto.ProductDetailResponse;
 import com.github.junpakpark.productmanage.product.query.dto.ProductOptionResponse;
 import com.github.junpakpark.productmanage.product.query.dto.ProductSummaryResponse;
 import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.NoSuchElementException;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -114,8 +115,8 @@ class ProductQueryRepositoryTest {
         // Action
         // Assert
         assertThatThrownBy(() -> productQueryRepository.getProductOptions(invalidProductId))
-                .isInstanceOf(NoSuchElementException.class)
-                .hasMessageContaining("Product with id " + invalidProductId + " not found");
+                .isInstanceOf(ProductNotFoundException.class)
+                .hasMessage(ProductErrorCode.PRODUCT_NOT_FOUND.getMessage() + " 상품 ID: 999");
     }
 
 

@@ -8,6 +8,6 @@ public interface TokenValidator {
 
     void validateToken(final String token);
 
-    boolean isAccessToken(final String token);
+    void validateAccessToken(final String token);
 
 }

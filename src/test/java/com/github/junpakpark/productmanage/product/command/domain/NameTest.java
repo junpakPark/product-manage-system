@@ -3,6 +3,8 @@ package com.github.junpakpark.productmanage.product.command.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.github.junpakpark.productmanage.product.exception.ProductBadRequestException;
+import com.github.junpakpark.productmanage.product.exception.ProductErrorCode;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -37,8 +39,8 @@ class NameTest {
             // Action
             // Assert
             assertThatThrownBy(() -> new Name(nullName))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("이름은 비어있을 수 없습니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(ProductErrorCode.NAME_BAD_REQUEST.getMessage());
         }
 
         @Test
@@ -50,8 +52,8 @@ class NameTest {
             // Action
             // Assert
             assertThatThrownBy(() -> new Name(blankName))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("이름은 비어있을 수 없습니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(ProductErrorCode.NAME_BAD_REQUEST.getMessage());
         }
 
         @Test
@@ -63,8 +65,8 @@ class NameTest {
             // Action
             // Assert
             assertThatThrownBy(() -> new Name(tooLongName))
-                    .isInstanceOf(IllegalArgumentException.class)
-                    .hasMessage("이름은 최대 100자 이하여야 합니다.");
+                    .isInstanceOf(ProductBadRequestException.class)
+                    .hasMessage(ProductErrorCode.NAME_LENGTH_BAD_REQUEST.getMessage().formatted(100));
         }
 
     }
