@@ -1,1 +1,6 @@
 rootProject.name = 'product-manage'
+
+include('app')
+include('common')
+include('member')
+include('product')

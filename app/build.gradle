@@ -1,0 +1,14 @@
+dependencies {
+    implementation project(path: ':common')
+    implementation project(path: ':member')
+    implementation project(path: ':product')
+    testImplementation 'io.rest-assured:rest-assured:5.5.0'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.named('bootJar') {
+    enabled = true
+}
