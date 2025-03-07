@@ -2,7 +2,7 @@ package com.github.junpakpark.productmanage.product.command.adapter.in.web;
 
 import com.github.junpakpark.productmanage.common.resolver.memberinfo.AuthMember;
 import com.github.junpakpark.productmanage.common.resolver.memberinfo.MemberInfo;
-import com.github.junpakpark.productmanage.product.command.application.port.in.ProductUseCase;
+import com.github.junpakpark.productmanage.product.command.application.port.in.web.ProductUseCase;
 import com.github.junpakpark.productmanage.product.command.application.port.in.web.ProductCommand;
 import jakarta.validation.Valid;
 import java.net.URI;
