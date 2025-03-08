@@ -1,9 +1,8 @@
-package com.github.junpakpark.productmanage.product.repository;
+package com.github.junpakpark.productmanage.product.query.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.github.junpakpark.productmanage.ProductManageApplication;
 import com.github.junpakpark.productmanage.common.config.QueryDslConfig;
 import com.github.junpakpark.productmanage.product.command.domain.Money;
 import com.github.junpakpark.productmanage.product.command.domain.Name;
@@ -17,7 +16,6 @@ import com.github.junpakpark.productmanage.product.exception.ProductNotFoundExce
 import com.github.junpakpark.productmanage.product.query.dto.ProductDetailResponse;
 import com.github.junpakpark.productmanage.product.query.dto.ProductOptionResponse;
 import com.github.junpakpark.productmanage.product.query.dto.ProductSummaryResponse;
-import com.github.junpakpark.productmanage.product.query.repository.ProductQueryRepository;
 import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.util.List;
@@ -27,13 +25,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.ContextConfiguration;
 
 @DataJpaTest
-@ContextConfiguration(classes = {ProductManageApplication.class, QueryDslConfig.class, ProductQueryRepository.class})
+@Import({QueryDslConfig.class, ProductQueryRepository.class})
 class ProductQueryRepositoryTest {
 
     @Autowired

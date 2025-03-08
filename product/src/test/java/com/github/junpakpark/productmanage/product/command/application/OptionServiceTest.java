@@ -203,7 +203,7 @@ class OptionServiceTest {
 
             // Assert
             final Product product = productRepository.getProductById(productId);
-            final ProductOption option = product.getProductOptions().getFirst();
+            final ProductOption option = product.getProductOptions().get(0);
             assertThat(option.getName()).isEqualTo(new Name(selectCommand.name()));
         }
 
